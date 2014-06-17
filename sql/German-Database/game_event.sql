@@ -1,79 +1,86 @@
--- phpMyAdmin SQL Dump
--- version 3.4.11.1deb2
--- http://www.phpmyadmin.net
---
--- Host: localhost
--- Erstellungszeit: 05. Jun 2014 um 15:52
--- Server Version: 5.5.37
--- PHP-Version: 5.4.4-14+deb7u9
+/*
+Navicat MySQL Data Transfer
 
-SET SQL_MODE="NO_AUTO_VALUE_ON_ZERO";
-SET time_zone = "+00:00";
+Source Server         : Gods of Nation
+Source Server Version : 50156
+Source Host           : localhost:3306
+Source Database       : world335pve
 
+Target Server Type    : MYSQL
+Target Server Version : 50156
+File Encoding         : 65001
 
-/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
-/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
-/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
-/*!40101 SET NAMES utf8 */;
+Date: 2014-06-17 07:10:55
+*/
 
---
--- Datenbank: `trinity_world`
---
+SET FOREIGN_KEY_CHECKS=0;
 
---
--- Daten für Tabelle `game_event`
---
+-- ----------------------------
+-- Table structure for `game_event`
+-- ----------------------------
+DROP TABLE IF EXISTS `game_event`;
+CREATE TABLE `game_event` (
+  `eventEntry` tinyint(3) unsigned NOT NULL COMMENT 'Entry of the game event',
+  `start_time` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00' COMMENT 'Absolute start date, the event will never start before',
+  `end_time` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00' COMMENT 'Absolute end date, the event will never start afler',
+  `occurence` bigint(20) unsigned NOT NULL DEFAULT '5184000' COMMENT 'Delay in minutes between occurences of the event',
+  `length` bigint(20) unsigned NOT NULL DEFAULT '2592000' COMMENT 'Length in minutes of the event',
+  `holiday` mediumint(8) unsigned NOT NULL DEFAULT '0' COMMENT 'Client side holiday id',
+  `description` varchar(255) DEFAULT NULL COMMENT 'Description of the event displayed in console',
+  `world_event` tinyint(3) unsigned NOT NULL DEFAULT '0' COMMENT '0 if normal event, 1 if world event',
+  `announce` tinyint(3) unsigned DEFAULT '2' COMMENT '0 dont announce, 1 announce, 2 value from config',
+  PRIMARY KEY (`eventEntry`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
-UPDATE `game_event` SET `eventEntry` = 1,`description` = 'Sonnenwendfest' WHERE `game_event`.`eventEntry` = 1;
-UPDATE `game_event` SET `eventEntry` = 2,`description` = 'Winterhauchfest' WHERE `game_event`.`eventEntry` = 2;
-UPDATE `game_event` SET `eventEntry` = 3,`description` = 'Dunkelmond-Jahrmarkt (Wälder von Terokkar)' WHERE `game_event`.`eventEntry` = 3;
-UPDATE `game_event` SET `eventEntry` = 4,`description` = 'Dunkelmond-Jahrmarkt (Wald von Elwynn)' WHERE `game_event`.`eventEntry` = 4;
-UPDATE `game_event` SET `eventEntry` = 5,`description` = 'Dunkelmond-Jahrmarkt (Mulgore)' WHERE `game_event`.`eventEntry` = 5;
-UPDATE `game_event` SET `eventEntry` = 6,`description` = 'Neujahr' WHERE `game_event`.`eventEntry` = 6;
-UPDATE `game_event` SET `eventEntry` = 7,`description` = 'Mondfest' WHERE `game_event`.`eventEntry` = 7;
-UPDATE `game_event` SET `eventEntry` = 8,`description` = 'Liebe liegt in der Luft ' WHERE `game_event`.`eventEntry` = 8;
-UPDATE `game_event` SET `eventEntry` = 9,`description` = 'Nobelgartenfest' WHERE `game_event`.`eventEntry` = 9;
-UPDATE `game_event` SET `eventEntry` = 10,`description` = 'Kinderwoche' WHERE `game_event`.`eventEntry` = 10;
-UPDATE `game_event` SET `eventEntry` = 11,`description` = 'Erntedankfest' WHERE `game_event`.`eventEntry` = 11;
-UPDATE `game_event` SET `eventEntry` = 12,`description` = 'Schlotternächte' WHERE `game_event`.`eventEntry` = 12;
-UPDATE `game_event` SET `eventEntry` = 22,`description` = 'Krieg von Ahn''Qiraj' WHERE `game_event`.`eventEntry` = 22;
-UPDATE `game_event` SET `eventEntry` = 17,`description` = 'Invasion der Geißel' WHERE `game_event`.`eventEntry` = 17;
-UPDATE `game_event` SET `eventEntry` = 13,`description` = 'Invasion der Elementare' WHERE `game_event`.`eventEntry` = 13;
-UPDATE `game_event` SET `eventEntry` = 14,`description` = 'Anglerwettbewerb im Schlingendorntal Aufruf' WHERE `game_event`.`eventEntry` = 14;
-UPDATE `game_event` SET `eventEntry` = 16,`description` = 'Gurubashiarena' WHERE `game_event`.`eventEntry` = 16;
-UPDATE `game_event` SET `eventEntry` = 15,`description` = 'Anglerwettbewerb im Schlingendorntal' WHERE `game_event`.`eventEntry` = 15;
-UPDATE `game_event` SET `eventEntry` = 18,`description` = 'Ruf zu den Waffen: Alteractal!' WHERE `game_event`.`eventEntry` = 18;
-UPDATE `game_event` SET `eventEntry` = 19,`description` = 'Ruf zu den Waffen: Kriegshymnenschlucht!' WHERE `game_event`.`eventEntry` = 19;
-UPDATE `game_event` SET `eventEntry` = 20,`description` = 'Ruf zu den Waffen: Arathibecken!' WHERE `game_event`.`eventEntry` = 20;
-UPDATE `game_event` SET `eventEntry` = 21,`description` = 'Ruf zu den Waffen: Auge des Sturms!' WHERE `game_event`.`eventEntry` = 21;
-UPDATE `game_event` SET `eventEntry` = 23,`description` = 'Dunkelmond-Jahrmarkt wird aufgebaut (Wald von Elwynn)' WHERE `game_event`.`eventEntry` = 23;
-UPDATE `game_event` SET `eventEntry` = 24,`description` = 'Braufest' WHERE `game_event`.`eventEntry` = 24;
-UPDATE `game_event` SET `eventEntry` = 25,`description` = 'Nacht beginnt' WHERE `game_event`.`eventEntry` = 25;
-UPDATE `game_event` SET `eventEntry` = 27,`description` = 'Rand des Wahnsinns, Gri''lek' WHERE `game_event`.`eventEntry` = 27;
-UPDATE `game_event` SET `eventEntry` = 28,`description` = 'Rand des Wahnsinns, Hazza''rah' WHERE `game_event`.`eventEntry` = 28;
-UPDATE `game_event` SET `eventEntry` = 29,`description` = 'Rand des Wahnsinns, Renataki' WHERE `game_event`.`eventEntry` = 29;
-UPDATE `game_event` SET `eventEntry` = 30,`description` = 'Rand des Wahnsinns, Wushoolay' WHERE `game_event`.`eventEntry` = 30;
-UPDATE `game_event` SET `eventEntry` = 31,`description` = 'Arenaturnier' WHERE `game_event`.`eventEntry` = 31;
-UPDATE `game_event` SET `eventEntry` = 32,`description` = 'L70ETC Konzert' WHERE `game_event`.`eventEntry` = 32;
-UPDATE `game_event` SET `eventEntry` = 52,`description` = 'Winter Veil: Gifts' WHERE `game_event`.`eventEntry` = 52;
-UPDATE `game_event` SET `eventEntry` = 51,`description` = 'Tag der Toten' WHERE `game_event`.`eventEntry` = 51;
-UPDATE `game_event` SET `eventEntry` = 48,`description` = 'Wintergrasp Allianz Verteidigung' WHERE `game_event`.`eventEntry` = 48;
-UPDATE `game_event` SET `eventEntry` = 49,`description` = 'Wintergrasp Horde Verteidigung' WHERE `game_event`.`eventEntry` = 49;
-UPDATE `game_event` SET `eventEntry` = 53,`description` = 'Ruf zu den Waffen: Strand der Uralten' WHERE `game_event`.`eventEntry` = 53;
-UPDATE `game_event` SET `eventEntry` = 55,`description` = 'Arena Season 3' WHERE `game_event`.`eventEntry` = 55;
-UPDATE `game_event` SET `eventEntry` = 56,`description` = 'Arena Season 4' WHERE `game_event`.`eventEntry` = 56;
-UPDATE `game_event` SET `eventEntry` = 57,`description` = 'Arena Season 5' WHERE `game_event`.`eventEntry` = 57;
-UPDATE `game_event` SET `eventEntry` = 58,`description` = 'Arena Season 6' WHERE `game_event`.`eventEntry` = 58;
-UPDATE `game_event` SET `eventEntry` = 59,`description` = 'Arena Season 7' WHERE `game_event`.`eventEntry` = 59;
-UPDATE `game_event` SET `eventEntry` = 60,`description` = 'Arena Season 8' WHERE `game_event`.`eventEntry` = 60;
-UPDATE `game_event` SET `eventEntry` = 54,`description` = 'Ruf zu den Waffen: Insel der Eroberung!' WHERE `game_event`.`eventEntry` = 54;
-UPDATE `game_event` SET `eventEntry` = 50,`description` = 'Piratentag' WHERE `game_event`.`eventEntry` = 50;
-UPDATE `game_event` SET `eventEntry` = 61,`description` = 'Zalazanes Sturz' WHERE `game_event`.`eventEntry` = 61;
-UPDATE `game_event` SET `eventEntry` = 62,`description` = 'Anglerwettbewerb im Schlingendorntal' WHERE `game_event`.`eventEntry` = 62;
-UPDATE `game_event` SET `eventEntry` = 63,`description` = 'Angelwettstreit der Kalu''ak' WHERE `game_event`.`eventEntry` = 63;
-UPDATE `game_event` SET `eventEntry` = 64,`description` = 'Angelwettstreit der Kalu''ak' WHERE `game_event`.`eventEntry` = 64;
-UPDATE `game_event` SET `eventEntry` = 26,`description` = 'Nobelgartenfest' WHERE `game_event`.`eventEntry` = 26;
-
-/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
-/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
-/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
+-- ----------------------------
+-- Records of game_event
+-- ----------------------------
+INSERT INTO `game_event` VALUES ('1', '2013-06-21 01:01:00', '2020-12-31 06:00:00', '525600', '20160', '341', 'Sonnenwendfest', '0', '2');
+INSERT INTO `game_event` VALUES ('2', '2013-12-15 07:00:00', '2020-12-31 06:00:00', '525600', '25920', '141', 'Winterhauchfest', '0', '2');
+INSERT INTO `game_event` VALUES ('3', '2013-02-03 01:01:00', '2020-12-31 06:00:00', '131040', '8639', '376', 'Dunkelmond-Jahrmarkt (Wälder von Terokkar)', '0', '2');
+INSERT INTO `game_event` VALUES ('4', '2013-03-03 01:01:00', '2020-12-31 06:00:00', '131040', '8639', '374', 'Dunkelmond-Jahrmarkt (Wald von Elwynn)', '0', '2');
+INSERT INTO `game_event` VALUES ('5', '2013-01-06 01:01:00', '2020-12-31 06:00:00', '131040', '8639', '375', 'Dunkelmond-Jahrmarkt (Mulgore)', '0', '2');
+INSERT INTO `game_event` VALUES ('6', '2010-01-01 07:00:00', '2020-12-31 06:00:00', '525600', '120', '0', 'Neujahr', '0', '2');
+INSERT INTO `game_event` VALUES ('7', '2013-01-27 01:01:00', '2020-12-31 06:00:00', '525600', '20160', '327', 'Mondfest', '0', '2');
+INSERT INTO `game_event` VALUES ('8', '2013-02-10 01:01:00', '2020-12-31 06:00:00', '525600', '20160', '423', 'Liebe liegt in der Luft ', '0', '2');
+INSERT INTO `game_event` VALUES ('9', '2014-04-20 00:01:00', '2020-12-31 06:00:00', '524160', '10080', '181', 'Nobelgartenfest', '0', '2');
+INSERT INTO `game_event` VALUES ('10', '2012-04-29 00:01:00', '2020-12-31 06:00:00', '525600', '10080', '201', 'Kinderwoche', '0', '2');
+INSERT INTO `game_event` VALUES ('11', '2013-09-13 01:01:00', '2020-12-31 06:00:00', '525600', '10080', '321', 'Erntedankfest', '0', '2');
+INSERT INTO `game_event` VALUES ('12', '2013-10-18 02:00:00', '2020-12-31 06:00:00', '525600', '20160', '324', 'Schlotternächte', '0', '2');
+INSERT INTO `game_event` VALUES ('22', '0000-00-00 00:00:00', '0000-00-00 00:00:00', '525600', '1', '0', 'Krieg von Ahn\'Qiraj', '0', '2');
+INSERT INTO `game_event` VALUES ('17', '0000-00-00 00:00:00', '0000-00-00 00:00:00', '525600', '1', '0', 'Invasion der Geißel', '0', '2');
+INSERT INTO `game_event` VALUES ('13', '0000-00-00 00:00:00', '0000-00-00 00:00:00', '525600', '1', '0', 'Invasion der Elementare', '0', '2');
+INSERT INTO `game_event` VALUES ('14', '2012-01-01 01:00:00', '2020-12-31 06:00:00', '10080', '1440', '0', 'Anglerwettbewerb im Schlingendorntal Aufruf', '0', '2');
+INSERT INTO `game_event` VALUES ('16', '2007-08-05 05:00:00', '2020-12-31 06:00:00', '180', '120', '0', 'Gurubashiarena', '0', '2');
+INSERT INTO `game_event` VALUES ('15', '2012-01-01 15:00:00', '2020-12-31 06:00:00', '10080', '120', '301', 'Anglerwettbewerb im Schlingendorntal', '0', '2');
+INSERT INTO `game_event` VALUES ('18', '2010-05-07 08:00:00', '2020-12-31 06:00:00', '60480', '6240', '283', 'Ruf zu den Waffen: Alteractal!', '0', '2');
+INSERT INTO `game_event` VALUES ('19', '2010-04-02 08:00:00', '2020-12-31 06:00:00', '60480', '6240', '284', 'Ruf zu den Waffen: Kriegshymnenschlucht!', '0', '2');
+INSERT INTO `game_event` VALUES ('20', '2010-04-23 08:00:00', '2020-12-31 06:00:00', '60480', '6240', '285', 'Ruf zu den Waffen: Arathibecken!', '0', '2');
+INSERT INTO `game_event` VALUES ('21', '2010-04-30 08:00:00', '2020-12-31 06:00:00', '60480', '6240', '353', 'Ruf zu den Waffen: Auge des Sturms!', '0', '2');
+INSERT INTO `game_event` VALUES ('23', '2011-03-03 01:01:00', '2020-12-31 06:00:00', '131040', '4320', '0', 'Dunkelmond-Jahrmarkt wird aufgebaut (Wald von Elwynn)', '0', '2');
+INSERT INTO `game_event` VALUES ('24', '2013-09-20 01:01:00', '2020-12-31 06:00:00', '525600', '21600', '372', 'Braufest', '0', '2');
+INSERT INTO `game_event` VALUES ('25', '2008-01-02 22:00:00', '2020-12-31 06:00:00', '1440', '720', '0', 'Nacht beginnt', '0', '2');
+INSERT INTO `game_event` VALUES ('27', '2008-03-24 06:00:00', '2020-12-31 06:00:00', '86400', '21600', '0', 'Rand des Wahnsinns, Gri\'lek', '0', '2');
+INSERT INTO `game_event` VALUES ('28', '2008-04-07 07:00:00', '2020-12-31 06:00:00', '86400', '21600', '0', 'Rand des Wahnsinns, Hazza\'rah', '0', '2');
+INSERT INTO `game_event` VALUES ('29', '2008-04-21 07:00:00', '2020-12-31 06:00:00', '86400', '21600', '0', 'Rand des Wahnsinns, Renataki', '0', '2');
+INSERT INTO `game_event` VALUES ('30', '2008-05-05 07:00:00', '2020-12-31 06:00:00', '86400', '21600', '0', 'Rand des Wahnsinns, Wushoolay', '0', '2');
+INSERT INTO `game_event` VALUES ('31', '0000-00-00 00:00:00', '0000-00-00 00:00:00', '5184000', '2592000', '0', 'Arenaturnier', '0', '2');
+INSERT INTO `game_event` VALUES ('32', '2008-05-15 21:00:00', '2020-01-01 08:00:00', '10080', '5', '0', 'L70ETC Konzert', '0', '2');
+INSERT INTO `game_event` VALUES ('52', '2010-12-25 06:00:00', '2020-12-31 06:00:00', '525600', '11700', '0', 'Winter Veil: Gifts', '0', '2');
+INSERT INTO `game_event` VALUES ('51', '2013-11-01 02:00:00', '2020-12-31 06:00:00', '525600', '2820', '409', 'Tag der Toten', '0', '2');
+INSERT INTO `game_event` VALUES ('48', '0000-00-00 00:00:00', '0000-00-00 00:00:00', '5184000', '2592000', '0', 'Wintergrasp Allianz Verteidigung', '5', '2');
+INSERT INTO `game_event` VALUES ('49', '0000-00-00 00:00:00', '0000-00-00 00:00:00', '5184000', '2592000', '0', 'Wintergrasp Horde Verteidigung', '5', '2');
+INSERT INTO `game_event` VALUES ('53', '2010-04-09 08:00:00', '2020-12-31 10:00:00', '60480', '6240', '400', 'Ruf zu den Waffen: Strand der Uralten', '0', '2');
+INSERT INTO `game_event` VALUES ('55', '0000-00-00 00:00:00', '0000-00-00 00:00:00', '5184000', '2592000', '0', 'Arena Season 3', '0', '2');
+INSERT INTO `game_event` VALUES ('56', '0000-00-00 00:00:00', '0000-00-00 00:00:00', '5184000', '2592000', '0', 'Arena Season 4', '0', '2');
+INSERT INTO `game_event` VALUES ('57', '0000-00-00 00:00:00', '0000-00-00 00:00:00', '5184000', '2592000', '0', 'Arena Season 5', '0', '2');
+INSERT INTO `game_event` VALUES ('58', '0000-00-00 00:00:00', '0000-00-00 00:00:00', '5184000', '2592000', '0', 'Arena Season 6', '0', '2');
+INSERT INTO `game_event` VALUES ('59', '0000-00-00 00:00:00', '0000-00-00 00:00:00', '5184000', '2592000', '0', 'Arena Season 7', '0', '2');
+INSERT INTO `game_event` VALUES ('60', '0000-00-00 00:00:00', '0000-00-00 00:00:00', '5184000', '2592000', '0', 'Arena Season 8', '0', '2');
+INSERT INTO `game_event` VALUES ('54', '2010-04-16 08:00:00', '2020-12-31 10:00:00', '60480', '6240', '420', 'Ruf zu den Waffen: Insel der Eroberung!', '0', '2');
+INSERT INTO `game_event` VALUES ('50', '2013-09-19 01:01:00', '2020-12-31 05:00:00', '525600', '1440', '398', 'Piratentag', '0', '2');
+INSERT INTO `game_event` VALUES ('61', '2010-09-07 01:00:00', '2010-10-10 01:00:00', '9999999', '47520', '0', 'Zalazanes Sturz', '0', '2');
+INSERT INTO `game_event` VALUES ('62', '2012-01-01 15:00:00', '2020-12-31 06:00:00', '10080', '180', '0', 'Anglerwettbewerb im Schlingendorntal', '0', '2');
+INSERT INTO `game_event` VALUES ('63', '2012-01-07 14:00:00', '2020-12-31 06:00:00', '10080', '180', '424', 'Angelwettstreit der Kalu\'ak', '0', '2');
+INSERT INTO `game_event` VALUES ('64', '2012-01-07 15:00:00', '2020-12-31 06:00:00', '10080', '60', '0', 'Angelwettstreit der Kalu\'ak', '0', '2');
+INSERT INTO `game_event` VALUES ('26', '2013-11-24 02:00:00', '2020-12-31 06:00:00', '525600', '10020', '404', 'Nobelgartenfest', '0', '2');

@@ -1,36 +1,37 @@
--- phpMyAdmin SQL Dump
--- version 3.4.11.1deb2
--- http://www.phpmyadmin.net
---
--- Host: localhost
--- Erstellungszeit: 10. Jun 2014 um 11:31
--- Server Version: 5.5.37
--- PHP-Version: 5.4.4-14+deb7u10
+/*
+Navicat MySQL Data Transfer
 
-SET SQL_MODE="NO_AUTO_VALUE_ON_ZERO";
-SET time_zone = "+00:00";
+Source Server         : Gods of Nation
+Source Server Version : 50156
+Source Host           : localhost:3306
+Source Database       : world335pve
 
+Target Server Type    : MYSQL
+Target Server Version : 50156
+File Encoding         : 65001
 
-/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
-/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
-/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
-/*!40101 SET NAMES utf8 */;
+Date: 2014-06-17 07:12:56
+*/
 
---
--- Datenbank: `trinity_world`
---
+SET FOREIGN_KEY_CHECKS=0;
 
---
--- Daten für Tabelle `outdoorpvp_template`
---
+-- ----------------------------
+-- Table structure for `outdoorpvp_template`
+-- ----------------------------
+DROP TABLE IF EXISTS `outdoorpvp_template`;
+CREATE TABLE `outdoorpvp_template` (
+  `TypeId` tinyint(3) unsigned NOT NULL,
+  `ScriptName` char(64) NOT NULL DEFAULT '',
+  `comment` text,
+  PRIMARY KEY (`TypeId`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC COMMENT='OutdoorPvP Templates';
 
-UPDATE `outdoorpvp_template` SET `TypeId` = 1,`comment` = 'Höllenfeuerhalbinsel' WHERE `outdoorpvp_template`.`TypeId` = 1;
-UPDATE `outdoorpvp_template` SET `TypeId` = 2,`comment` = 'Nagrand' WHERE `outdoorpvp_template`.`TypeId` = 2;
-UPDATE `outdoorpvp_template` SET `TypeId` = 3,`comment` = 'Wälder von Terokkar' WHERE `outdoorpvp_template`.`TypeId` = 3;
-UPDATE `outdoorpvp_template` SET `TypeId` = 4,`comment` = 'Zangarmarschen' WHERE `outdoorpvp_template`.`TypeId` = 4;
-UPDATE `outdoorpvp_template` SET `TypeId` = 5,`comment` = 'Silithus' WHERE `outdoorpvp_template`.`TypeId` = 5;
-UPDATE `outdoorpvp_template` SET `TypeId` = 6,`comment` = 'Östliche Pestländer' WHERE `outdoorpvp_template`.`TypeId` = 6;
-
-/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
-/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
-/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
+-- ----------------------------
+-- Records of outdoorpvp_template
+-- ----------------------------
+INSERT INTO `outdoorpvp_template` VALUES ('1', 'outdoorpvp_hp', 'Höllenfeuerhalbinsel');
+INSERT INTO `outdoorpvp_template` VALUES ('2', 'outdoorpvp_na', 'Nagrand');
+INSERT INTO `outdoorpvp_template` VALUES ('3', 'outdoorpvp_tf', 'Wälder von Terokkar');
+INSERT INTO `outdoorpvp_template` VALUES ('4', 'outdoorpvp_zm', 'Zangarmarschen');
+INSERT INTO `outdoorpvp_template` VALUES ('5', 'outdoorpvp_si', 'Silithus');
+INSERT INTO `outdoorpvp_template` VALUES ('6', 'outdoorpvp_ep', 'Östliche Pestländer');

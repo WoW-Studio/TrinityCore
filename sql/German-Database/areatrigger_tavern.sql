@@ -1,146 +1,144 @@
-################################################################################
-#####                                                                      #####
-#####          GGGGGGGG    MM      MM     DDDDDDD    BBBBBBB               #####
-#####         GG           M M    M M     D     DD   B      B              #####
-#####        GG    GGG     M  M  M  M     D      D   BBBBBBB               #####
-#####         GG     GG    M   MM   M     D     DD   B      B              #####
-#####          GGGGGGG     M        M     DDDDDDD    BBBBBBB               #####
-#####                             CREW                                     #####
-################################################################################
-# Copyright (C) 2007-2012 GMDB <http://sourceforge.net/projects/gm-db>         #
-#                                                                              #
-# This program is free software: you can redistribute it and/or modify         #
-# it under the terms of the GNU General Public License as published by         #
-# the Free Software Foundation, either version 3 of the License, or            #
-# (at your option) any later version.                                          #
-#                                                                              #
-# This program is distributed in the hope that it will be useful,              #
-# but WITHOUT ANY WARRANTY; without even the implied warranty of               #
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the                #
-# GNU General Public License for more details.                                 #
-#                                                                              #
-# You should have received a copy of the GNU General Public License            #
-# along with this program.  If not, see <http://www.gnu.org/licenses/>.        #
-################################################################################
+/*
+Navicat MySQL Data Transfer
 
+Source Server         : Gods of Nation
+Source Server Version : 50156
+Source Host           : localhost:3306
+Source Database       : world335pve
 
+Target Server Type    : MYSQL
+Target Server Version : 50156
+File Encoding         : 65001
 
-#####	areatrigger_tavern	#####
+Date: 2014-06-17 07:10:07
+*/
 
-SET NAMES 'utf8';
+SET FOREIGN_KEY_CHECKS=0;
 
-UPDATE areatrigger_tavern SET name='Westfall - Späherkuppe Gasthaus' WHERE id=71;
-UPDATE areatrigger_tavern SET name='Nesingwarys Expedition' WHERE id=98;
-UPDATE areatrigger_tavern SET name='Strahnbrad' WHERE id=178;
-UPDATE areatrigger_tavern SET name='Der Wald von Elwynn - Goldhain - Gasthaus zur Höhle des Löwen' WHERE id=562;
-UPDATE areatrigger_tavern SET name='Das Rotkammgebirge - Rathaus von Seenhain' WHERE id=682;
-UPDATE areatrigger_tavern SET name='Dämmerwald - Dunkelhain - Taverne Zum roten Raben' WHERE id=707;
-UPDATE areatrigger_tavern SET name='Vorgebirge des Hügellands - Rathaus von Süderstade' WHERE id=708;
-UPDATE areatrigger_tavern SET name='Die Düstermarschen - Die Insel Theramore' WHERE id=709;
-UPDATE areatrigger_tavern SET name='Dun Morogh - Kharanos - Brauerei Donnerbräu' WHERE id=710;
-UPDATE areatrigger_tavern SET name='Loch Modan - Thelsamar - Gasthof zum Starkbierlager' WHERE id=712;
-UPDATE areatrigger_tavern SET name='Das Sumpfland - Hafen von Menethil - Tiefenwassertaverne' WHERE id=713;
-UPDATE areatrigger_tavern SET name='Teldrassil - Dolanaar' WHERE id=715;
-UPDATE areatrigger_tavern SET name='Dunkelküste - Auberdine' WHERE id=716;
-UPDATE areatrigger_tavern SET name='Eschental - Astranaar' WHERE id=717;
-UPDATE areatrigger_tavern SET name='Tirisfal - Brill - Taverne Zur Galgenschlinge' WHERE id=719;
-UPDATE areatrigger_tavern SET name='Silberwald ' WHERE id=720;
-UPDATE areatrigger_tavern SET name='Vorgebirge des Hügellands ' WHERE id=721;
-UPDATE areatrigger_tavern SET name='Mulgore ' WHERE id=722;
-UPDATE areatrigger_tavern SET name='Das Brachland ' WHERE id=742;
-UPDATE areatrigger_tavern SET name='Das Brachland ' WHERE id=743;
-UPDATE areatrigger_tavern SET name='Durotar ' WHERE id=843;
-UPDATE areatrigger_tavern SET name='Die Sümpfe des Elends ' WHERE id=844;
-UPDATE areatrigger_tavern SET name='Schlingendorntal ' WHERE id=862;
-UPDATE areatrigger_tavern SET name='Das Brachland ' WHERE id=982;
-UPDATE areatrigger_tavern SET name='Das Steinkrallengebirge ' WHERE id=1022;
-UPDATE areatrigger_tavern SET name='Tanaris ' WHERE id=1023;
-UPDATE areatrigger_tavern SET name='Feralas ' WHERE id=1024;
-UPDATE areatrigger_tavern SET name='Feralas ' WHERE id=1025;
-UPDATE areatrigger_tavern SET name='Burg Wildhammer' WHERE id=1042;
-UPDATE areatrigger_tavern SET name='Das Ödland ' WHERE id=1606;
-UPDATE areatrigger_tavern SET name='Das Arathi Hochland ' WHERE id=1646;
-UPDATE areatrigger_tavern SET name='Desolace ' WHERE id=2266;
-UPDATE areatrigger_tavern SET name='Desolace ' WHERE id=2267;
-UPDATE areatrigger_tavern SET name='Tausend Nadeln ' WHERE id=2286;
-UPDATE areatrigger_tavern SET name='Winterquell ' WHERE id=2287;
-UPDATE areatrigger_tavern SET name='Eschental ' WHERE id=2610;
-UPDATE areatrigger_tavern SET name='Sturmwind backup rest' WHERE id=2786;
-UPDATE areatrigger_tavern SET name='Unterstadt' WHERE id=3547;
-UPDATE areatrigger_tavern SET name='Dorf der Bruchhauer' WHERE id=3690;
-UPDATE areatrigger_tavern SET name='Basislager von Grom\'gol' WHERE id=3886;
-UPDATE areatrigger_tavern SET name='Burg Cenarius' WHERE id=3985;
-UPDATE areatrigger_tavern SET name='Kapelle des hoffnungsvollen Lichts' WHERE id=4058;
-UPDATE areatrigger_tavern SET name='Der Steinkrallengipfel' WHERE id=4090;
-UPDATE areatrigger_tavern SET name='Gasthaus von Tristessa' WHERE id=4108;
-UPDATE areatrigger_tavern SET name='Oberes Gasthaus von Tristessa' WHERE id=4109;
-UPDATE areatrigger_tavern SET name='Gasthaus der Azurwacht' WHERE id=4240;
-UPDATE areatrigger_tavern SET name='Blutmythosinsel - Gasthaus der Blutwacht' WHERE id=4241;
-UPDATE areatrigger_tavern SET name='Gasthaus der Morgenluft' WHERE id=4265;
-UPDATE areatrigger_tavern SET name='Gasthaus der Zuflucht der Cenarius' WHERE id=4300;
-UPDATE areatrigger_tavern SET name='Gasthaus von Thrallmar' WHERE id=4336;
-UPDATE areatrigger_tavern SET name='Gasthaus der Ehrenfeste' WHERE id=4337;
-UPDATE areatrigger_tavern SET name='Gasthaus von Zabra\'Jin' WHERE id=4373;
-UPDATE areatrigger_tavern SET name='Gasthaus von Telredor' WHERE id=4374;
-UPDATE areatrigger_tavern SET name='Gasthaus von Garadar' WHERE id=4375;
-UPDATE areatrigger_tavern SET name='Gasthaus von Telaar' WHERE id=4376;
-UPDATE areatrigger_tavern SET name='Gasthaus von Allerias Feste' WHERE id=4377;
-UPDATE areatrigger_tavern SET name='Gasthaus der Steinbrecherfeste' WHERE id=4378;
-UPDATE areatrigger_tavern SET name='Gasthaus der Falkenwacht' WHERE id=4380;
-UPDATE areatrigger_tavern SET name='Gasthaus des Temples von Thelamat' WHERE id=4381;
-UPDATE areatrigger_tavern SET name='Zuflucht des Cenarius' WHERE id=4382;
-UPDATE areatrigger_tavern SET name='Gasthaus der Oreborzuflucht' WHERE id=4383;
-UPDATE areatrigger_tavern SET name='Gasthaus des Falkenplatzes' WHERE id=4486;
-UPDATE areatrigger_tavern SET name='Gasthaus der Donnerfeste' WHERE id=4494;
-UPDATE areatrigger_tavern SET name='Gasthaus des Vorgebirges des alten Hügellands' WHERE id=4498;
-UPDATE areatrigger_tavern SET name='Gasthaus von Sylvanaar' WHERE id=4499;
-UPDATE areatrigger_tavern SET name='Gasthaus der Area 52' WHERE id=4521;
-UPDATE areatrigger_tavern SET name='Gasthaus von Schattenmond' WHERE id=4526;
-UPDATE areatrigger_tavern SET name='Gasthaus der Wildhammerfeste' WHERE id=4528;
-UPDATE areatrigger_tavern SET name='Gasthaus der Sturmsäule' WHERE id=4555;
-UPDATE areatrigger_tavern SET name='Gasthaus von Toshleys Station' WHERE id=4558;
-UPDATE areatrigger_tavern SET name='Gasthaus des Altars der Sha\'tar' WHERE id=4577;
-UPDATE areatrigger_tavern SET name='Gasthaus von Mok\'Nathal' WHERE id=4595;
-UPDATE areatrigger_tavern SET name='Gasthaus des Sanktums der Sterne' WHERE id=4607;
-UPDATE areatrigger_tavern SET name='Oberes Gasthaus des Sanktums der Sterne' WHERE id=4608;
-UPDATE areatrigger_tavern SET name='Gasthaus des Ewigen Hains' WHERE id=4640;
-UPDATE areatrigger_tavern SET name='Gasthaus des Morastwinkels' WHERE id=4714;
-UPDATE areatrigger_tavern SET name='Gasthaus der Westwacht' WHERE id=4753;
-UPDATE areatrigger_tavern SET name='Gasthaus des Lagers der Winterhufe' WHERE id=4755;
-UPDATE areatrigger_tavern SET name='Gasthaus von Fort Wildervar' WHERE id=4756;
-UPDATE areatrigger_tavern SET name='Eisenschmiede' WHERE id=4769;
-UPDATE areatrigger_tavern SET name='Gasthaus von Brackenwall' WHERE id=4775;
-UPDATE areatrigger_tavern SET name='Insel von Quel\'Danas, Gasthof beim Hafen der Sonnenweiten' WHERE id=4847;
-UPDATE areatrigger_tavern SET name='Gasthaus des Außenpostens Bor\'gorok' WHERE id=4861;
-UPDATE areatrigger_tavern SET name='Gasthaus der Landebahn Kurbelzisch' WHERE id=4867;
-UPDATE areatrigger_tavern SET name='Gasthaus von Taunka\'le' WHERE id=4868;
-UPDATE areatrigger_tavern SET name='Kriegshymnenfeste' WHERE id=4910;
-UPDATE areatrigger_tavern SET name='Gashaus der Valianzfeste' WHERE id=4961;
-UPDATE areatrigger_tavern SET name='Sternruh' WHERE id=4964;
-UPDATE areatrigger_tavern SET name='Gasthaus der Ammertannhütte' WHERE id=4965;
-UPDATE areatrigger_tavern SET name='Lager der Westfallbrigade' WHERE id=4966;
-UPDATE areatrigger_tavern SET name='Camp Oneqwah' WHERE id=4967;
-UPDATE areatrigger_tavern SET name='Burg Siegeswall' WHERE id=4970;
-UPDATE areatrigger_tavern SET name='Hafen Moa\'ki' WHERE id=4975;
-UPDATE areatrigger_tavern SET name='Kamagua' WHERE id=4976;
-UPDATE areatrigger_tavern SET name='Gasthaus von Unu\'pe' WHERE id=4977;
-UPDATE areatrigger_tavern SET name='Gallgrimm' WHERE id=4979;
-UPDATE areatrigger_tavern SET name='Feste Wintergarde' WHERE id=4993;
-UPDATE areatrigger_tavern SET name='Lager der Speerträger' WHERE id=5030;
-UPDATE areatrigger_tavern SET name='Agmars Hammer' WHERE id=5045;
-UPDATE areatrigger_tavern SET name='Argentumstrand' WHERE id=5062;
-UPDATE areatrigger_tavern SET name='Zim\'Torga' WHERE id=5164;
-UPDATE areatrigger_tavern SET name='Eisfestung' WHERE id=5182;
-UPDATE areatrigger_tavern SET name='K3' WHERE id=5183;
-UPDATE areatrigger_tavern SET name='Brunnhildar' WHERE id=5200;
-UPDATE areatrigger_tavern SET name='Bergfels\' Zuflucht' WHERE id=5204;
-UPDATE areatrigger_tavern SET name='Nesingwarys Basislager' WHERE id=5217;
-UPDATE areatrigger_tavern SET name='Argentumvorhut' WHERE id=5227;
-UPDATE areatrigger_tavern SET name='Wyrmruhtempel' WHERE id=5314;
-UPDATE areatrigger_tavern SET name='Wyrmruhtempel' WHERE id=5315;
-UPDATE areatrigger_tavern SET name='Wyrmruhtempel' WHERE id=5316;
-UPDATE areatrigger_tavern SET name='Wyrmruhtempel' WHERE id=5317;
-UPDATE areatrigger_tavern SET name='Camp Tunka\'lo' WHERE id=5323;
-UPDATE areatrigger_tavern SET name='Krasus\' Landeplatz' WHERE id=5327;
+-- ----------------------------
+-- Table structure for `areatrigger_tavern`
+-- ----------------------------
+DROP TABLE IF EXISTS `areatrigger_tavern`;
+CREATE TABLE `areatrigger_tavern` (
+  `id` mediumint(8) unsigned NOT NULL DEFAULT '0' COMMENT 'Identifier',
+  `name` text,
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 ROW_FORMAT=FIXED COMMENT='Trigger System';
 
-SET NAMES 'latin1';
+-- ----------------------------
+-- Records of areatrigger_tavern
+-- ----------------------------
+INSERT INTO `areatrigger_tavern` VALUES ('71', 'Westfall - Späherkuppe Gasthaus');
+INSERT INTO `areatrigger_tavern` VALUES ('562', 'Der Wald von Elwynn - Goldhain - Gasthaus zur Höhle des Löwen');
+INSERT INTO `areatrigger_tavern` VALUES ('682', 'Das Rotkammgebirge - Rathaus von Seenhain');
+INSERT INTO `areatrigger_tavern` VALUES ('707', 'Dämmerwald - Dunkelhain - Taverne Zum roten Raben');
+INSERT INTO `areatrigger_tavern` VALUES ('708', 'Vorgebirge des Hügellands - Rathaus von Süderstade');
+INSERT INTO `areatrigger_tavern` VALUES ('709', 'Die Düstermarschen - Die Insel Theramore');
+INSERT INTO `areatrigger_tavern` VALUES ('710', 'Dun Morogh - Kharanos - Brauerei Donnerbräu');
+INSERT INTO `areatrigger_tavern` VALUES ('712', 'Loch Modan - Thelsamar - Gasthof zum Starkbierlager');
+INSERT INTO `areatrigger_tavern` VALUES ('713', 'Das Sumpfland - Hafen von Menethil - Tiefenwassertaverne');
+INSERT INTO `areatrigger_tavern` VALUES ('715', 'Teldrassil - Dolanaar');
+INSERT INTO `areatrigger_tavern` VALUES ('716', 'Dunkelküste - Auberdine');
+INSERT INTO `areatrigger_tavern` VALUES ('717', 'Eschental - Astranaar');
+INSERT INTO `areatrigger_tavern` VALUES ('719', 'Tirisfal - Brill - Taverne Zur Galgenschlinge');
+INSERT INTO `areatrigger_tavern` VALUES ('720', 'Silberwald ');
+INSERT INTO `areatrigger_tavern` VALUES ('721', 'Vorgebirge des Hügellands ');
+INSERT INTO `areatrigger_tavern` VALUES ('722', 'Mulgore ');
+INSERT INTO `areatrigger_tavern` VALUES ('742', 'Das Brachland ');
+INSERT INTO `areatrigger_tavern` VALUES ('743', 'Das Brachland ');
+INSERT INTO `areatrigger_tavern` VALUES ('843', 'Durotar ');
+INSERT INTO `areatrigger_tavern` VALUES ('844', 'Die Sümpfe des Elends ');
+INSERT INTO `areatrigger_tavern` VALUES ('862', 'Schlingendorntal ');
+INSERT INTO `areatrigger_tavern` VALUES ('982', 'Das Brachland ');
+INSERT INTO `areatrigger_tavern` VALUES ('4241', 'Blutmythosinsel - Gasthaus der Blutwacht');
+INSERT INTO `areatrigger_tavern` VALUES ('1022', 'Das Steinkrallengebirge ');
+INSERT INTO `areatrigger_tavern` VALUES ('1023', 'Tanaris ');
+INSERT INTO `areatrigger_tavern` VALUES ('1024', 'Feralas ');
+INSERT INTO `areatrigger_tavern` VALUES ('1025', 'Feralas ');
+INSERT INTO `areatrigger_tavern` VALUES ('1606', 'Das Ödland ');
+INSERT INTO `areatrigger_tavern` VALUES ('1646', 'Das Arathi Hochland ');
+INSERT INTO `areatrigger_tavern` VALUES ('2266', 'Desolace ');
+INSERT INTO `areatrigger_tavern` VALUES ('2267', 'Desolace ');
+INSERT INTO `areatrigger_tavern` VALUES ('2286', 'Tausend Nadeln ');
+INSERT INTO `areatrigger_tavern` VALUES ('2287', 'Winterquell ');
+INSERT INTO `areatrigger_tavern` VALUES ('2610', 'Eschental ');
+INSERT INTO `areatrigger_tavern` VALUES ('2786', 'Sturmwind backup rest');
+INSERT INTO `areatrigger_tavern` VALUES ('4108', 'Gasthaus von Tristessa');
+INSERT INTO `areatrigger_tavern` VALUES ('4240', 'Gasthaus der Azurwacht');
+INSERT INTO `areatrigger_tavern` VALUES ('4336', 'Gasthaus von Thrallmar');
+INSERT INTO `areatrigger_tavern` VALUES ('4337', 'Gasthaus der Ehrenfeste');
+INSERT INTO `areatrigger_tavern` VALUES ('4373', 'Gasthaus von Zabra\'Jin');
+INSERT INTO `areatrigger_tavern` VALUES ('4375', 'Gasthaus von Garadar');
+INSERT INTO `areatrigger_tavern` VALUES ('4376', 'Gasthaus von Telaar');
+INSERT INTO `areatrigger_tavern` VALUES ('4377', 'Gasthaus von Allerias Feste');
+INSERT INTO `areatrigger_tavern` VALUES ('4382', 'Zuflucht des Cenarius');
+INSERT INTO `areatrigger_tavern` VALUES ('4486', 'Gasthaus des Falkenplatzes');
+INSERT INTO `areatrigger_tavern` VALUES ('4526', 'Gasthaus von Schattenmond');
+INSERT INTO `areatrigger_tavern` VALUES ('4528', 'Gasthaus der Wildhammerfeste');
+INSERT INTO `areatrigger_tavern` VALUES ('4595', 'Gasthaus von Mok\'Nathal');
+INSERT INTO `areatrigger_tavern` VALUES ('4607', 'Gasthaus des Sanktums der Sterne');
+INSERT INTO `areatrigger_tavern` VALUES ('4374', 'Gasthaus von Telredor');
+INSERT INTO `areatrigger_tavern` VALUES ('4383', 'Gasthaus der Oreborzuflucht');
+INSERT INTO `areatrigger_tavern` VALUES ('4381', 'Gasthaus des Temples von Thelamat');
+INSERT INTO `areatrigger_tavern` VALUES ('4499', 'Gasthaus von Sylvanaar');
+INSERT INTO `areatrigger_tavern` VALUES ('4558', 'Gasthaus von Toshleys Station');
+INSERT INTO `areatrigger_tavern` VALUES ('4494', 'Gasthaus der Donnerfeste');
+INSERT INTO `areatrigger_tavern` VALUES ('4640', 'Gasthaus des Ewigen Hains');
+INSERT INTO `areatrigger_tavern` VALUES ('4521', 'Gasthaus der Area 52');
+INSERT INTO `areatrigger_tavern` VALUES ('4555', 'Gasthaus der Sturmsäule');
+INSERT INTO `areatrigger_tavern` VALUES ('4577', 'Gasthaus des Altars der Sha\'tar');
+INSERT INTO `areatrigger_tavern` VALUES ('178', 'Strahnbrad');
+INSERT INTO `areatrigger_tavern` VALUES ('1042', 'Burg Wildhammer');
+INSERT INTO `areatrigger_tavern` VALUES ('3690', 'Dorf der Bruchhauer');
+INSERT INTO `areatrigger_tavern` VALUES ('3886', 'Basislager von Grom\'gol');
+INSERT INTO `areatrigger_tavern` VALUES ('4058', 'Kapelle des hoffnungsvollen Lichts');
+INSERT INTO `areatrigger_tavern` VALUES ('3985', 'Burg Cenarius');
+INSERT INTO `areatrigger_tavern` VALUES ('4090', 'Der Steinkrallengipfel');
+INSERT INTO `areatrigger_tavern` VALUES ('3547', 'Unterstadt');
+INSERT INTO `areatrigger_tavern` VALUES ('4769', 'Eisenschmiede');
+INSERT INTO `areatrigger_tavern` VALUES ('4714', 'Gasthaus des Morastwinkels');
+INSERT INTO `areatrigger_tavern` VALUES ('4775', 'Gasthaus von Brackenwall');
+INSERT INTO `areatrigger_tavern` VALUES ('4847', 'Insel von Quel\'Danas, Gasthof beim Hafen der Sonnenweiten');
+INSERT INTO `areatrigger_tavern` VALUES ('4961', 'Gashaus der Valianzfeste');
+INSERT INTO `areatrigger_tavern` VALUES ('4867', 'Gasthaus der Landebahn Kurbelzisch');
+INSERT INTO `areatrigger_tavern` VALUES ('4977', 'Gasthaus von Unu\'pe');
+INSERT INTO `areatrigger_tavern` VALUES ('4868', 'Gasthaus von Taunka\'le');
+INSERT INTO `areatrigger_tavern` VALUES ('4910', 'Kriegshymnenfeste');
+INSERT INTO `areatrigger_tavern` VALUES ('4861', 'Gasthaus des Außenpostens Bor\'gorok');
+INSERT INTO `areatrigger_tavern` VALUES ('4755', 'Gasthaus des Lagers der Winterhufe');
+INSERT INTO `areatrigger_tavern` VALUES ('4756', 'Gasthaus von Fort Wildervar');
+INSERT INTO `areatrigger_tavern` VALUES ('5045', 'Agmars Hammer');
+INSERT INTO `areatrigger_tavern` VALUES ('4964', 'Sternruh');
+INSERT INTO `areatrigger_tavern` VALUES ('4965', 'Gasthaus der Ammertannhütte');
+INSERT INTO `areatrigger_tavern` VALUES ('4966', 'Lager der Westfallbrigade');
+INSERT INTO `areatrigger_tavern` VALUES ('4967', 'Camp Oneqwah');
+INSERT INTO `areatrigger_tavern` VALUES ('4970', 'Burg Siegeswall');
+INSERT INTO `areatrigger_tavern` VALUES ('4975', 'Hafen Moa\'ki');
+INSERT INTO `areatrigger_tavern` VALUES ('4976', 'Kamagua');
+INSERT INTO `areatrigger_tavern` VALUES ('4979', 'Gallgrimm');
+INSERT INTO `areatrigger_tavern` VALUES ('4993', 'Feste Wintergarde');
+INSERT INTO `areatrigger_tavern` VALUES ('5030', 'Lager der Speerträger');
+INSERT INTO `areatrigger_tavern` VALUES ('5062', 'Argentumstrand');
+INSERT INTO `areatrigger_tavern` VALUES ('5164', 'Zim\'Torga');
+INSERT INTO `areatrigger_tavern` VALUES ('5182', 'Eisfestung');
+INSERT INTO `areatrigger_tavern` VALUES ('5183', 'K3');
+INSERT INTO `areatrigger_tavern` VALUES ('5200', 'Brunnhildar');
+INSERT INTO `areatrigger_tavern` VALUES ('5204', 'Bergfels\' Zuflucht');
+INSERT INTO `areatrigger_tavern` VALUES ('5217', 'Nesingwarys Basislager');
+INSERT INTO `areatrigger_tavern` VALUES ('5227', 'Argentumvorhut');
+INSERT INTO `areatrigger_tavern` VALUES ('5323', 'Camp Tunka\'lo');
+INSERT INTO `areatrigger_tavern` VALUES ('5327', 'Krasus\' Landeplatz');
+INSERT INTO `areatrigger_tavern` VALUES ('4753', 'Gasthaus der Westwacht');
+INSERT INTO `areatrigger_tavern` VALUES ('4265', 'Gasthaus der Morgenluft');
+INSERT INTO `areatrigger_tavern` VALUES ('98', 'Nesingwarys Expedition');
+INSERT INTO `areatrigger_tavern` VALUES ('4109', 'Oberes Gasthaus von Tristessa');
+INSERT INTO `areatrigger_tavern` VALUES ('4300', 'Gasthaus der Zuflucht der Cenarius');
+INSERT INTO `areatrigger_tavern` VALUES ('4378', 'Gasthaus der Steinbrecherfeste');
+INSERT INTO `areatrigger_tavern` VALUES ('4380', 'Gasthaus der Falkenwacht');
+INSERT INTO `areatrigger_tavern` VALUES ('4498', 'Gasthaus des Vorgebirges des alten Hügellands');
+INSERT INTO `areatrigger_tavern` VALUES ('4608', 'Oberes Gasthaus des Sanktums der Sterne');
+INSERT INTO `areatrigger_tavern` VALUES ('5314', 'Wyrmruhtempel');
+INSERT INTO `areatrigger_tavern` VALUES ('5315', 'Wyrmruhtempel');
+INSERT INTO `areatrigger_tavern` VALUES ('5316', 'Wyrmruhtempel');
+INSERT INTO `areatrigger_tavern` VALUES ('5317', 'Wyrmruhtempel');
+INSERT INTO `areatrigger_tavern` VALUES ('5360', 'Grom\'arsh Crash-Site');
