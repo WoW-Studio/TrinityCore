@@ -79,6 +79,8 @@ Read file [THANKS](THANKS)
 
 [Forums](http://www.trinitycore.org/f/)
 
-# ![logo](http://wow-studio.eu/wcf/images/altitudeBlack/logo.png) WoW-Studio
+# ![logo](http://wow-studio.eu/wcf/images/altitudeBlack/logo.png)
+
+## WoW-Studio
 
 [Forum] (http://wow-studio.eu/index.php?page=Index)
