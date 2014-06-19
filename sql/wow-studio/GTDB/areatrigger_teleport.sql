@@ -10,7 +10,7 @@ Target Server Type    : MYSQL
 Target Server Version : 50156
 File Encoding         : 65001
 
-Date: 2014-06-17 07:10:29
+Date: 2014-06-19 10:14:18
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -256,8 +256,8 @@ INSERT INTO `areatrigger_teleport` VALUES ('5869', 'Das Rubinsanktum (Eingang)',
 INSERT INTO `areatrigger_teleport` VALUES ('5872', 'Das Rubinsanktum (Ausgang)', '571', '3604.23', '192.083', '-110.821', '2.195', '0');
 INSERT INTO `areatrigger_teleport` VALUES ('5276', 'Gundrak (exit - 3)', '571', '6702.47', '-4660.55', '441.568', '0.75', '0');
 INSERT INTO `areatrigger_teleport` VALUES ('5233', 'Gundrak (exit - 4)', '571', '6970.02', '-4402.09', '441.578', '3.845', '0');
-INSERT INTO `areatrigger_teleport` VALUES ('4612', 'The Botanica', '530', '3407.11', '1488.48', '182.838', '2.50112', '0');
-INSERT INTO `areatrigger_teleport` VALUES ('4614', 'The Mechanar', '530', '2869.89', '1552.76', '252.159', '0.733993', '0');
+INSERT INTO `areatrigger_teleport` VALUES ('4612', 'Die Botanica', '530', '3407.11', '1488.48', '182.838', '2.50112', '0');
+INSERT INTO `areatrigger_teleport` VALUES ('4614', 'Die Mechanar', '530', '2869.89', '1552.76', '252.159', '0.733993', '0');
 INSERT INTO `areatrigger_teleport` VALUES ('2406', 'Shadowfang - South Fall Target', '0', '-276.241', '1652.68', '77.5589', '3.14159', '0');
 INSERT INTO `areatrigger_teleport` VALUES ('2407', 'Shadowfang - South Fall Target', '0', '-276.241', '1652.68', '77.5589', '3.14159', '0');
 INSERT INTO `areatrigger_teleport` VALUES ('2408', 'Shadowfang Front Fall Exit Target', '0', '-225.34', '1556.53', '93.0454', '4.71239', '0');
@@ -269,29 +269,29 @@ INSERT INTO `areatrigger_teleport` VALUES ('4267', 'Eversong Woods - Duskwither 
 INSERT INTO `areatrigger_teleport` VALUES ('4304', 'Hellfire Ramparts - Omor Exit Target', '530', '-233.33', '3199.71', '-50', '0.785398', '0');
 INSERT INTO `areatrigger_teleport` VALUES ('5148', 'Das Ausmerzen von Stratholme (Ausgang)', '1', '-8756.6', '-4457.02', '-200.481', '1.39626', '0');
 INSERT INTO `areatrigger_teleport` VALUES ('4917', 'Arena - Nagrand - Teleport Target - Game On', '559', '4054.57', '2923.23', '13.8179', '0', '0');
-INSERT INTO `areatrigger_teleport` VALUES ('4919', 'Arena - Bladesedge - Teleport Target - Game On', '562', '6238.89', '264.155', '0.894302', '0', '0');
-INSERT INTO `areatrigger_teleport` VALUES ('4921', 'Arena - Bladesedge - Teleport Target - Game On', '562', '6238.89', '264.155', '0.894302', '0', '0');
-INSERT INTO `areatrigger_teleport` VALUES ('4922', 'Arena - Bladesedge - Teleport Target - Game On', '562', '6238.89', '264.155', '0.894302', '0', '0');
-INSERT INTO `areatrigger_teleport` VALUES ('4923', 'Arena - Bladesedge - Teleport Target - Game On', '562', '6238.89', '264.155', '0.894302', '0', '0');
-INSERT INTO `areatrigger_teleport` VALUES ('4924', 'Arena - Bladesedge - Teleport Target - Game On', '562', '6238.89', '264.155', '0.894302', '0', '0');
-INSERT INTO `areatrigger_teleport` VALUES ('4925', 'Arena - Bladesedge - Teleport Target - Game On', '562', '6238.89', '264.155', '0.894302', '0', '0');
-INSERT INTO `areatrigger_teleport` VALUES ('4927', 'Arena - Undercity - Teleport Target - Game On', '572', '1286.57', '1667.4', '39.602', '0', '0');
-INSERT INTO `areatrigger_teleport` VALUES ('4928', 'Arena - Undercity - Teleport Target - Game On', '572', '1286.57', '1667.4', '39.602', '0', '0');
-INSERT INTO `areatrigger_teleport` VALUES ('4929', 'Arena - Undercity - Teleport Target - Game On', '572', '1286.57', '1667.4', '39.602', '0', '0');
-INSERT INTO `areatrigger_teleport` VALUES ('4930', 'Arena - Undercity - Teleport Target - Game On', '572', '1286.57', '1667.4', '39.602', '0', '0');
-INSERT INTO `areatrigger_teleport` VALUES ('4931', 'Arena - Undercity - Teleport Target - Game On', '572', '1286.57', '1667.4', '39.602', '0', '0');
-INSERT INTO `areatrigger_teleport` VALUES ('4932', 'Arena - Undercity - Teleport Target - Game On', '572', '1286.57', '1667.4', '39.602', '0', '0');
-INSERT INTO `areatrigger_teleport` VALUES ('4933', 'Arena - Undercity - Teleport Target - Game On', '572', '1286.57', '1667.4', '39.602', '0', '0');
-INSERT INTO `areatrigger_teleport` VALUES ('4934', 'Arena - Undercity - Teleport Target - Game On', '572', '1286.57', '1667.4', '39.602', '0', '0');
-INSERT INTO `areatrigger_teleport` VALUES ('4935', 'Arena - Undercity - Teleport Target - Game On', '572', '1286.57', '1667.4', '39.602', '0', '0');
-INSERT INTO `areatrigger_teleport` VALUES ('4936', 'Arena - Undercity - Teleport Target - Game On', '572', '1286.57', '1667.4', '39.602', '0', '0');
-INSERT INTO `areatrigger_teleport` VALUES ('4941', 'Arena - Undercity - Teleport Target - Game On', '572', '1286.57', '1667.4', '39.602', '0', '0');
+INSERT INTO `areatrigger_teleport` VALUES ('4919', 'Arena - Bladesedge - Teleport Ziel - Game On', '562', '6238.89', '264.155', '0.894302', '0', '0');
+INSERT INTO `areatrigger_teleport` VALUES ('4921', 'Arena - Bladesedge - Teleport Ziel - Game On', '562', '6238.89', '264.155', '0.894302', '0', '0');
+INSERT INTO `areatrigger_teleport` VALUES ('4922', 'Arena - Bladesedge - Teleport Ziel - Game On', '562', '6238.89', '264.155', '0.894302', '0', '0');
+INSERT INTO `areatrigger_teleport` VALUES ('4923', 'Arena - Bladesedge - Teleport Ziel - Game On', '562', '6238.89', '264.155', '0.894302', '0', '0');
+INSERT INTO `areatrigger_teleport` VALUES ('4924', 'Arena - Bladesedge - Teleport Ziel - Game On', '562', '6238.89', '264.155', '0.894302', '0', '0');
+INSERT INTO `areatrigger_teleport` VALUES ('4925', 'Arena - Bladesedge - Teleport Ziel - Game On', '562', '6238.89', '264.155', '0.894302', '0', '0');
+INSERT INTO `areatrigger_teleport` VALUES ('4927', 'Arena - Undercity - Teleport Ziel - Game On', '572', '1286.57', '1667.4', '39.602', '0', '0');
+INSERT INTO `areatrigger_teleport` VALUES ('4928', 'Arena - Undercity - Teleport Ziel - Game On', '572', '1286.57', '1667.4', '39.602', '0', '0');
+INSERT INTO `areatrigger_teleport` VALUES ('4929', 'Arena - Undercity - Teleport Ziel - Game On', '572', '1286.57', '1667.4', '39.602', '0', '0');
+INSERT INTO `areatrigger_teleport` VALUES ('4930', 'Arena - Undercity - Teleport Ziel - Game On', '572', '1286.57', '1667.4', '39.602', '0', '0');
+INSERT INTO `areatrigger_teleport` VALUES ('4931', 'Arena - Undercity - Teleport Ziel - Game On', '572', '1286.57', '1667.4', '39.602', '0', '0');
+INSERT INTO `areatrigger_teleport` VALUES ('4932', 'Arena - Undercity - Teleport Ziel - Game On', '572', '1286.57', '1667.4', '39.602', '0', '0');
+INSERT INTO `areatrigger_teleport` VALUES ('4933', 'Arena - Undercity - Teleport Ziel - Game On', '572', '1286.57', '1667.4', '39.602', '0', '0');
+INSERT INTO `areatrigger_teleport` VALUES ('4934', 'Arena - Undercity - Teleport Ziel - Game On', '572', '1286.57', '1667.4', '39.602', '0', '0');
+INSERT INTO `areatrigger_teleport` VALUES ('4935', 'Arena - Undercity - Teleport Ziel - Game On', '572', '1286.57', '1667.4', '39.602', '0', '0');
+INSERT INTO `areatrigger_teleport` VALUES ('4936', 'Arena - Undercity - Teleport Ziel - Game On', '572', '1286.57', '1667.4', '39.602', '0', '0');
+INSERT INTO `areatrigger_teleport` VALUES ('4941', 'Arena - Undercity - Teleport Ziel - Game On', '572', '1286.57', '1667.4', '39.602', '0', '0');
 INSERT INTO `areatrigger_teleport` VALUES ('4944', 'Arena - Bladesedge - Teleport Target - Game On', '562', '6238.89', '264.155', '0.894302', '0', '0');
-INSERT INTO `areatrigger_teleport` VALUES ('5326', 'Arena - Dalaran Arena - Teleport Target', '617', '1291.57', '792.965', '8.11463', '0', '0');
-INSERT INTO `areatrigger_teleport` VALUES ('5328', 'Arena - Dalaran Arena - Teleport Target', '617', '1291.57', '792.965', '8.11463', '0', '0');
-INSERT INTO `areatrigger_teleport` VALUES ('5329', 'Arena - Dalaran Arena - Teleport Target', '617', '1291.57', '792.965', '8.11463', '0', '0');
-INSERT INTO `areatrigger_teleport` VALUES ('5330', 'Arena - Dalaran Arena - Teleport Target', '617', '1291.57', '792.965', '8.11463', '0', '0');
-INSERT INTO `areatrigger_teleport` VALUES ('5331', 'Arena - Dalaran Arena - Teleport Target', '617', '1291.57', '792.965', '8.11463', '0', '0');
+INSERT INTO `areatrigger_teleport` VALUES ('5326', 'Arena - Dalaran Arena - Teleport Ziel', '617', '1291.57', '792.965', '8.11463', '0', '0');
+INSERT INTO `areatrigger_teleport` VALUES ('5328', 'Arena - Dalaran Arena - Teleport Ziel', '617', '1291.57', '792.965', '8.11463', '0', '0');
+INSERT INTO `areatrigger_teleport` VALUES ('5329', 'Arena - Dalaran Arena - Teleport Ziel', '617', '1291.57', '792.965', '8.11463', '0', '0');
+INSERT INTO `areatrigger_teleport` VALUES ('5330', 'Arena - Dalaran Arena - Teleport Ziel', '617', '1291.57', '792.965', '8.11463', '0', '0');
+INSERT INTO `areatrigger_teleport` VALUES ('5331', 'Arena - Dalaran Arena - Teleport Ziel', '617', '1291.57', '792.965', '8.11463', '0', '0');
 INSERT INTO `areatrigger_teleport` VALUES ('5447', 'Arena - Orgrimmar - Teleport Target 3', '618', '763.365', '-284.29', '28.2767', '0', '0');
 INSERT INTO `areatrigger_teleport` VALUES ('5127', 'Ebon Hold (E.K.) Top Return Target', '0', '2462.76', '-5598.19', '550.22', '3.66519', '0');
 INSERT INTO `areatrigger_teleport` VALUES ('5128', 'Ebon Hold (E.K.) Top West Target', '0', '2472.67', '-5530.1', '420.642', '4.50295', '0');
@@ -308,5 +308,5 @@ INSERT INTO `areatrigger_teleport` VALUES ('5138', 'Ebon Hold (E.K.) Bottom -> G
 INSERT INTO `areatrigger_teleport` VALUES ('2547', 'Scholomance - Exit Porch Target 001', '0', '1399.42', '-2574.59', '107.786', '6.28319', '0');
 INSERT INTO `areatrigger_teleport` VALUES ('2548', 'Scholomance - Exit Porch Target 001', '0', '1399.42', '-2574.59', '107.786', '6.28319', '0');
 INSERT INTO `areatrigger_teleport` VALUES ('2549', 'Scholomance - Exit Porch Target 001', '0', '1399.42', '-2574.59', '107.786', '6.28319', '0');
-INSERT INTO `areatrigger_teleport` VALUES ('5235', 'Ahn\'Kahet (exit)', '571', '3817.4', '2032.82', '11.0133', '3.61283', '0');
-INSERT INTO `areatrigger_teleport` VALUES ('5740', 'Halls of Reflection (The Impenetrable Door)', '668', '5354.01', '2053.53', '707.695', '0.785398', '0');
+INSERT INTO `areatrigger_teleport` VALUES ('5235', 'Ahn\'Kahet (Ausgang)', '571', '3817.4', '2032.82', '11.0133', '3.61283', '0');
+INSERT INTO `areatrigger_teleport` VALUES ('5740', 'Hallen der Reflexion (Die undurchdringliche Tür)', '668', '5354.01', '2053.53', '707.695', '0.785398', '0');

@@ -10,7 +10,7 @@ Target Server Type    : MYSQL
 Target Server Version : 50156
 File Encoding         : 65001
 
-Date: 2014-06-17 07:12:37
+Date: 2014-06-19 10:14:03
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -482,9 +482,9 @@ INSERT INTO `locales_points_of_interest` VALUES ('444', null, null, 'Rand Rhobar
 INSERT INTO `locales_points_of_interest` VALUES ('445', null, null, 'Bowen Brisboise', null, null, null, null, null);
 INSERT INTO `locales_points_of_interest` VALUES ('446', null, null, 'Taverne Zur Galgenschlinge', null, null, null, null, null);
 INSERT INTO `locales_points_of_interest` VALUES ('447', null, null, 'Morganus', null, null, null, null, null);
-INSERT INTO `locales_points_of_interest` VALUES ('448', null, null, null, null, null, null, null, null);
-INSERT INTO `locales_points_of_interest` VALUES ('449', null, null, null, null, null, null, null, null);
-INSERT INTO `locales_points_of_interest` VALUES ('450', null, null, null, null, null, null, null, null);
-INSERT INTO `locales_points_of_interest` VALUES ('451', null, null, null, null, null, null, null, null);
-INSERT INTO `locales_points_of_interest` VALUES ('452', null, null, null, null, null, null, null, null);
-INSERT INTO `locales_points_of_interest` VALUES ('453', null, null, null, null, null, null, null, null);
+INSERT INTO `locales_points_of_interest` VALUES ('448', null, null, 'Braufest Souveniere', null, null, null, null, null);
+INSERT INTO `locales_points_of_interest` VALUES ('449', null, null, 'Braufest Ram Rennen', null, null, null, null, null);
+INSERT INTO `locales_points_of_interest` VALUES ('450', null, null, 'Brau des Monats, Eisenschmiede', null, null, null, null, null);
+INSERT INTO `locales_points_of_interest` VALUES ('451', null, null, 'Goblin Braufest Souveniere', null, null, null, null, null);
+INSERT INTO `locales_points_of_interest` VALUES ('452', null, null, 'Goblin Braufest Ram Rennen', null, null, null, null, null);
+INSERT INTO `locales_points_of_interest` VALUES ('453', null, null, 'Brau des Monats, Ogrimmar', null, null, null, null, null);
