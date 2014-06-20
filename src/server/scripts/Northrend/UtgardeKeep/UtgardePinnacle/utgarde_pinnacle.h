@@ -40,7 +40,8 @@ enum DataTypes
     DATA_MASSIVE_JORMUNGAR          = 9,
     DATA_FEROCIOUS_RHINO            = 10,
     DATA_GORTOK_ORB                 = 11,
-    DATA_GORTOK_PALEHOOF_SPHERE     = 12
+    DATA_GORTOK_PALEHOOF_SPHERE     = 12,
+	DATA_GRAUF                      = 13,
 };
 
 enum CreatureIds
@@ -58,7 +59,8 @@ enum CreatureIds
     NPC_RAVENOUS_FURBOLG            = 26684,
     NPC_MASSIVE_JORMUNGAR           = 26685,
     NPC_FEROCIOUS_RHINO             = 26686,
-    NPC_PALEHOOF_ORB                = 26688
+    NPC_PALEHOOF_ORB                = 26688,
+	NPC_GRAUF                       = 26893
 };
 
 enum GameObjectIds
