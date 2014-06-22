@@ -1,4 +1,4 @@
---Matis the Cruel
+-- Matis the Cruel
 UPDATE `creature_template` SET `AIName`='SmartAI' WHERE `entry`=17664;
  
 DELETE FROM `smart_scripts` WHERE `entryorguid`=17664 AND `id`=0 AND `source_type`=0 LIMIT 1;

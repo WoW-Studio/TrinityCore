@@ -1,4 +1,3 @@
---Freed from the Hive
 UPDATE `smart_scripts` SET `event_type`=11 WHERE  `entryorguid`=9546 AND `source_type`=0 AND `id`=0;
 UPDATE `smart_scripts` SET `target_type`=12, `target_param1`=1 WHERE  `entryorguid`=954600 AND `source_type`=9 AND `id`=2;
 

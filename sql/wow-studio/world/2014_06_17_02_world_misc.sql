@@ -1,5 +1,3 @@
---Rise, Obsidion
-
 UPDATE `gameobject_template` SET `AIName`= 'SmartGameObjectAI' WHERE  `entry`=148498;
 
 DELETE FROM `smart_scripts` WHERE `entryorguid` =148498;

@@ -1,4 +1,4 @@
---Redemption
+-- Redemption
 UPDATE `creature_template` SET `AIName`= 'SmartAI',`ScriptName`='' WHERE `entry` =17542;
         DELETE FROM `smart_scripts` WHERE `entryorguid` =17542;
 

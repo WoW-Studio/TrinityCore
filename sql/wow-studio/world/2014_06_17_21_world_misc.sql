@@ -1,4 +1,4 @@
---Emergency Protocol: Section 8.2, Paragraph D    
+-- Emergency Protocol: Section 8.2, Paragraph D    
 	UPDATE `creature_template` SET `AIName`= 'SmartAI' WHERE `entry` IN(25845,25846,25847);
 
     DELETE FROM `smart_scripts` WHERE `entryorguid` IN (25845,25846,25847);

@@ -1,4 +1,4 @@
---On Ruby Wings 
+-- On Ruby Wings 
  UPDATE `creature_template` SET `spell1`=50430, `spell2`=55987, `spell3`=50348, `InhabitType`=4 WHERE `entry`=27996;
 
     DELETE FROM `npc_spellclick_spells` WHERE npc_entry IN (27996);
@@ -41,10 +41,10 @@
 
     DELETE FROM creature_text WHERE entry = 28006;
     INSERT INTO creature_text VALUES
-    (28006,0,1,'You think you have won, mortal? Face the unbridled power of Antiok!',14,0,100,0,0,0,'Antiok Yell1'),
-    (28006,0,2,'Behold! The Scythe of Antiok!',14,0,100,0,0,0,'Antiok Yell2'),
-    (28006,1,1,'Soon the bones of Galakrond will rise from their eternal slumber and wreak havoc upon this world!',14,0,100,0,0,0,'Antiok Yell3'),
-    (28006,1,2,'The Lich King demands more frost wyrms be sent to Angrathar! Meet his demands or face my wrath!',14,0,100,0,0,0,'Antiok Yell4'),
-    (28006,1,3,'Faster, dogs! We must not relent in our assault against the interlopers!',14,0,100,0,0,0,'Antiok Yell5'),
-    (28006,2,1,'Attackers are upon us! Let none through to this ancient grave!',14,0,100,0,0,0,'Antiok Yell6'),
-    (28006,2,2,'Hear me, minions! Hear your lord, Antiok! Double your efforts or pay the consequences of failure!',14,0,100,0,0,0,'Antiok Yell7');
+    (28006,0,1,'You think you have won, mortal? Face the unbridled power of Antiok!',14,0,100,0,0,0,'Antiok Yell1', 0),
+    (28006,0,2,'Behold! The Scythe of Antiok!',14,0,100,0,0,0,'Antiok Yell2', 0),
+    (28006,1,1,'Soon the bones of Galakrond will rise from their eternal slumber and wreak havoc upon this world!',14,0,100,0,0,0,'Antiok Yell3', 0),
+    (28006,1,2,'The Lich King demands more frost wyrms be sent to Angrathar! Meet his demands or face my wrath!',14,0,100,0,0,0,'Antiok Yell4', 0),
+    (28006,1,3,'Faster, dogs! We must not relent in our assault against the interlopers!',14,0,100,0,0,0,'Antiok Yell5', 0),
+    (28006,2,1,'Attackers are upon us! Let none through to this ancient grave!',14,0,100,0,0,0,'Antiok Yell6', 0),
+    (28006,2,2,'Hear me, minions! Hear your lord, Antiok! Double your efforts or pay the consequences of failure!',14,0,100,0,0,0,'Antiok Yell7', 0);

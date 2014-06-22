@@ -1,4 +1,4 @@
---The Way to His Heart
+-- The Way to His Heart
 UPDATE `creature_template` SET `ainame`='SmartAI' WHERE `entry` IN (24786,24797);
 DELETE FROM `smart_scripts` WHERE `entryorguid` IN (24786,24797) AND `source_type`=0;
 INSERT INTO `smart_scripts` VALUES

@@ -1,4 +1,4 @@
---The Emissary
+-- The Emissary
 UPDATE creature_template SET Armor_mod=0 WHERE entry=26452;
 
 UPDATE `creature_template` SET `ainame`='SmartAI' WHERE `entry` IN (26452);

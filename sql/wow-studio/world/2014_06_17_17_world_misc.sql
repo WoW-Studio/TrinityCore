@@ -1,4 +1,4 @@
---The Rune of Command
+-- The Rune of Command
 DELETE FROM `spell_scripts` WHERE `id`=49859;
 INSERT INTO `spell_scripts` VALUES
 (49859,0,0,8,24345,0,0,0,0,0,0);
