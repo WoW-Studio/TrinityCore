@@ -1,8 +1,5 @@
-﻿-- Error Fix By Shadowsilk --
+﻿ALTER TABLE `account` ADD COLUMN `last_attempt_ip` VARCHAR(15) NOT NULL DEFAULT '127.0.0.1' AFTER `last_ip`;
 
-ALTER TABLE `account`
-	ADD COLUMN `last_attempt_ip` VARCHAR(15) NOT NULL DEFAULT '127.0.0.1' AFTER `last_ip`;
-	
 CREATE TABLE `logs_ip_actions` (
 `id` INT(10) UNSIGNED NOT NULL AUTO_INCREMENT COMMENT 'Unique Identifier',
 `account_id` INT(10) UNSIGNED NOT NULL COMMENT 'Account ID',
@@ -14,7 +11,7 @@ CREATE TABLE `logs_ip_actions` (
 `time` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT 'Timestamp',
 `comment` TEXT NULL COMMENT 'Allows users to add a comment',
 PRIMARY KEY (`id`)
-);
+)
 COMMENT='Used to log ips of individual actions'
 COLLATE='utf8_general_ci'
 ENGINE=InnoDB;
