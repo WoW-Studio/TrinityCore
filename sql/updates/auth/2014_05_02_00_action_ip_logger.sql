@@ -1,4 +1,6 @@
-﻿ALTER TABLE `account`
+﻿-- Error Fix By Shadowsilk --
+
+ALTER TABLE `account`
 	ADD COLUMN `last_attempt_ip` VARCHAR(15) NOT NULL DEFAULT '127.0.0.1' AFTER `last_ip`;
 	
 CREATE TABLE `logs_ip_actions` (
@@ -11,7 +13,7 @@ CREATE TABLE `logs_ip_actions` (
 `unixtime` INT(10) UNSIGNED NOT NULL COMMENT 'Unixtime',
 `time` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT 'Timestamp',
 `comment` TEXT NULL COMMENT 'Allows users to add a comment',
-PRIMARY KEY (`id`)
+PRIMARY KEY (`id`);
 )
 COMMENT='Used to log ips of individual actions'
 COLLATE='utf8_general_ci'
