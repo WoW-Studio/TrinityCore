@@ -13,8 +13,6 @@
  *
  * You should have received a copy of the GNU General Public License along
  * with this program. If not, see <http://www.gnu.org/licenses/>.
- * Credits:
- * aletuna <https://github.com/aletuna>
  */
 
 #include "ScriptMgr.h"
@@ -51,7 +49,7 @@ enum Misc
     H_DATA_EMBRACE_DMG                      = 40000
 };
 
-#define DATA_SPHERE_DISTANCE                50v.0f
+#define DATA_SPHERE_DISTANCE                25.0f
 #define DATA_SPHERE_ANGLE_OFFSET            M_PI / 2
 #define DATA_GROUND_POSITION_Z              11.30809f
 
@@ -71,16 +69,13 @@ enum Events
     EVENT_CONJURE_FLAME_SPHERES             = 1,
     EVENT_BLOODTHIRST,
     EVENT_VANISH,
-    EVENT_DISAPPEAR,
-    EVENT_REAPPEAR,
+    EVENT_JUST_VANISHED,
     EVENT_VANISHED,
     EVENT_FEEDING,
-
 
     // Flame Sphere
     EVENT_START_MOVE,
     EVENT_DESPAWN
-
 };
 
 class boss_prince_taldaram : public CreatureScript
@@ -98,23 +93,12 @@ class boss_prince_taldaram : public CreatureScript
                 _embraceTakenDamage = 0;
             }
 
-            void JustReachedHome() override
-            {
-                if (me->HasAura(SPELL_BEAM_VISUAL)) // Temporary workaround, couldnt figure out why he gets it everytime he resets
-                    me->RemoveAura(SPELL_BEAM_VISUAL);
-            }
-
             void Reset() override
             {
                 _Reset();
                 _flameSphereTargetGUID = 0;
                 _embraceTargetGUID = 0;
                 _embraceTakenDamage = 0;
-                firstVanish = false;
-                secondVanish = false;
-                thirdVanish = false;
-                isFeeding = false;
-                me->SetReactState(REACT_AGGRESSIVE);
             }
 
             void EnterCombat(Unit* /*who*/) override
@@ -122,8 +106,8 @@ class boss_prince_taldaram : public CreatureScript
                 _EnterCombat();
                 Talk(SAY_AGGRO);
                 events.ScheduleEvent(EVENT_BLOODTHIRST, 10000);
+                events.ScheduleEvent(EVENT_VANISH, urand(25000, 35000));
                 events.ScheduleEvent(EVENT_CONJURE_FLAME_SPHERES, 5000);
-                me->SetReactState(REACT_AGGRESSIVE);
             }
 
             void JustSummoned(Creature* summon)
@@ -136,7 +120,6 @@ class boss_prince_taldaram : public CreatureScript
                     case NPC_FLAME_SPHERE_2:
                     case NPC_FLAME_SPHERE_3:
                         summon->AI()->SetGUID(_flameSphereTargetGUID);
-                        summon->SetSpeed(MOVE_RUN, 1.5f);
                     default:
                         return;
                 }
@@ -167,7 +150,7 @@ class boss_prince_taldaram : public CreatureScript
                                 _flameSphereTargetGUID = victim->GetGUID();
                                 DoCast(victim, SPELL_CONJURE_FLAME_SPHERE);
                             }
-                            events.ScheduleEvent(EVENT_CONJURE_FLAME_SPHERES, 25000);
+                            events.ScheduleEvent(EVENT_CONJURE_FLAME_SPHERES, 15000);
                             break;
                         case EVENT_VANISH:
                         {
@@ -182,41 +165,36 @@ class boss_prince_taldaram : public CreatureScript
 
                             if (targets > 2)
                             {
-                                me->SetReactState(REACT_PASSIVE);
-                                me->AttackStop();
                                 Talk(SAY_VANISH);
-                                me->HandleEmoteCommand(EMOTE_ONESHOT_SPELL_CAST_OMNI);
+                                DoCast(me, SPELL_VANISH);
+                                events.DelayEvents(500);
+                                events.ScheduleEvent(EVENT_JUST_VANISHED, 500);
                                 if (Unit* embraceTarget = SelectTarget(SELECT_TARGET_RANDOM, 0, 100.0f, true))
                                     _embraceTargetGUID = embraceTarget->GetGUID();
-                                events.DelayEvents(4500);
-                                events.ScheduleEvent(EVENT_REAPPEAR, 3500);
-                                events.ScheduleEvent(EVENT_DISAPPEAR, 250);
                             }
+                            events.ScheduleEvent(EVENT_VANISH, urand(25000, 35000));
                             break;
                         }
-                        case EVENT_DISAPPEAR:
-                            me->SetVisible(false);
-                            break;
-                        case EVENT_REAPPEAR:
-                            me->SetVisible(true);
-                            events.ScheduleEvent(EVENT_VANISHED, 1500);
+                        case EVENT_JUST_VANISHED:
+                            if (Unit* embraceTarget = GetEmbraceTarget())
+                            {
+                                me->GetMotionMaster()->Clear();
+                                me->SetSpeed(MOVE_WALK, 2.0f, true);
+                                me->GetMotionMaster()->MoveChase(embraceTarget);
+                            }
+                            events.ScheduleEvent(EVENT_VANISHED, 1300);
                             break;
                         case EVENT_VANISHED:
                             if (Unit* embraceTarget = GetEmbraceTarget())
-                            {
-                                float x(0), y(0), z(0);
-                                embraceTarget->GetNearPoint(me, x, y, z, me->GetObjectSize() / 3, 0.1f, me->GetAngle(embraceTarget));
-                                me->NearTeleportTo(x, y, z, embraceTarget->GetOrientation());
                                 DoCast(embraceTarget, SPELL_EMBRACE_OF_THE_VAMPYR);
-                            }
                             Talk(SAY_FEED);
-                            isFeeding = true;
+                            me->GetMotionMaster()->Clear();
+                            me->SetSpeed(MOVE_WALK, 1.0f, true);
+                            me->GetMotionMaster()->MoveChase(me->GetVictim());
                             events.ScheduleEvent(EVENT_FEEDING, 20000);
                             break;
                         case EVENT_FEEDING:
                             _embraceTargetGUID = 0;
-                            me->SetReactState(REACT_AGGRESSIVE);
-                            isFeeding = false;
                             break;
                         default:
                             break;
@@ -228,35 +206,15 @@ class boss_prince_taldaram : public CreatureScript
 
             void DamageTaken(Unit* /*doneBy*/, uint32& damage) override
             {
-                if (!firstVanish && !HealthAbovePct(76))
-                {
-                    events.ScheduleEvent(EVENT_VANISH, 2500);
-                    firstVanish = true;
-                }
-                else
-                    if (!secondVanish && !HealthAbovePct(51))
-                    {
-                        events.ScheduleEvent(EVENT_VANISH, 2500);
-                        secondVanish = true;
-                    }
-                    else
-                        if (!thirdVanish && !HealthAbovePct(26))
-                        {
-                            events.ScheduleEvent(EVENT_VANISH, 2500);
-                            thirdVanish = true;
-                        }
-
                 Unit* embraceTarget = GetEmbraceTarget();
 
-                if (isFeeding && embraceTarget && embraceTarget->IsAlive())
+                if (embraceTarget && embraceTarget->IsAlive())
                 {
                     _embraceTakenDamage += damage;
                     if (_embraceTakenDamage > DUNGEON_MODE<uint32>(DATA_EMBRACE_DMG, H_DATA_EMBRACE_DMG))
                     {
                         _embraceTargetGUID = 0;
                         me->CastStop();
-                        isFeeding = false;
-                        me->SetReactState(REACT_AGGRESSIVE);
                     }
                 }
             }
@@ -312,10 +270,6 @@ class boss_prince_taldaram : public CreatureScript
             uint64 _flameSphereTargetGUID;
             uint64 _embraceTargetGUID;
             uint32 _embraceTakenDamage;
-            bool firstVanish;
-            bool secondVanish;
-            bool thirdVanish;
-            bool isFeeding;			
         };
 
         CreatureAI* GetAI(Creature* creature) const override
