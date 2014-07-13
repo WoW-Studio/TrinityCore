@@ -41,13 +41,13 @@ BattlefieldWG::~BattlefieldWG()
 
 bool BattlefieldWG::SetupBattlefield()
 {
-    InitStalker(BATTLEFIELD_WG_NPC_STALKER, WintergraspStalkerPos[0], WintergraspStalkerPos[1], WintergraspStalkerPos[2], WintergraspStalkerPos[3]);
-
     m_TypeId = BATTLEFIELD_WG;                              // See enum BattlefieldTypes
     m_BattleId = BATTLEFIELD_BATTLEID_WG;
     m_ZoneId = BATTLEFIELD_WG_ZONEID;
     m_MapId = BATTLEFIELD_WG_MAPID;
     m_Map = sMapMgr->FindMap(m_MapId, 0);
+
+    InitStalker(BATTLEFIELD_WG_NPC_STALKER, WintergraspStalkerPos[0], WintergraspStalkerPos[1], WintergraspStalkerPos[2], WintergraspStalkerPos[3]);
 
     m_MaxPlayer = sWorld->getIntConfig(CONFIG_WINTERGRASP_PLR_MAX);
     m_IsEnabled = sWorld->getBoolConfig(CONFIG_WINTERGRASP_ENABLE);
@@ -683,9 +683,9 @@ void BattlefieldWG::PromotePlayer(Player* killer)
     if (!m_isActive)
         return;
     // Updating rank of player
-    if (Aura* aur = killer->GetAura(SPELL_RECRUIT))
+    if (Aura* auraRecruit = killer->GetAura(SPELL_RECRUIT))
     {
-        if (aur->GetStackAmount() >= 5)
+        if (auraRecruit->GetStackAmount() >= 5)
         {
             killer->RemoveAura(SPELL_RECRUIT);
             killer->CastSpell(killer, SPELL_CORPORAL, true);
@@ -694,9 +694,9 @@ void BattlefieldWG::PromotePlayer(Player* killer)
         else
             killer->CastSpell(killer, SPELL_RECRUIT, true);
     }
-    else if (Aura* aur = killer->GetAura(SPELL_CORPORAL))
+    else if (Aura* auraCorporal = killer->GetAura(SPELL_CORPORAL))
     {
-        if (aur->GetStackAmount() >= 5)
+        if (auraCorporal->GetStackAmount() >= 5)
         {
             killer->RemoveAura(SPELL_CORPORAL);
             killer->CastSpell(killer, SPELL_LIEUTENANT, true);
