@@ -412,6 +412,24 @@ public:
     }
 };
 
+class item_fiery_soul_fragment : public ItemScript
+{
+public:
+   item_fiery_soul_fragment(): ItemScript("fiery_soul_fragment_item"){ }
+
+   bool OnUse(Player* player, Item* /*item*/, SpellCastTargets const& /*targets*/)
+   {
+       if(player->FindNearestCreature(21311, 5, true))
+       {
+           player->CastSpell(player, 36587, true);
+           player->CastSpell(player, 36573, true);
+           player->CompleteQuest(10525); // need to remove this ugly hack
+       }
+       return true;
+
+   }
+};
+
 void AddSC_item_scripts()
 {
     new item_only_for_flight();
@@ -425,4 +443,5 @@ void AddSC_item_scripts()
     new item_dehta_trap_smasher();
     new item_trident_of_nazjan();
     new item_captured_frog();
+	new item_fiery_soul_fragment();
 }
