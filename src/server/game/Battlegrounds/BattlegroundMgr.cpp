@@ -824,12 +824,8 @@ void BattlegroundMgr::ToggleArenaTesting()
 void BattlegroundMgr::SetHolidayWeekends(uint32 mask)
 {
     for (uint32 bgtype = 1; bgtype < MAX_BATTLEGROUND_TYPE_ID; ++bgtype)
-    {
         if (Battleground* bg = GetBattlegroundTemplate(BattlegroundTypeId(bgtype)))
-        {
-            bg->SetHoliday(mask & (1 << bgtype));
-        }
-    }
+            bg->SetHoliday((mask & (1 << bgtype)) != 0);
 }
 
 void BattlegroundMgr::ScheduleQueueUpdate(uint32 arenaMatchmakerRating, uint8 arenaType, BattlegroundQueueTypeId bgQueueTypeId, BattlegroundTypeId bgTypeId, BattlegroundBracketId bracket_id)
@@ -977,7 +973,7 @@ BattlegroundTypeId BattlegroundMgr::GetRandomBG(BattlegroundTypeId bgTypeId)
 
         // there is only one bg to select
         if (selectionWeights.size() == 1)
-            return bgTypeId;
+            return selectionWeights.begin()->first;
 
         if (weight)
         {

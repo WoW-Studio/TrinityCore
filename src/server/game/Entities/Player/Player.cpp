@@ -3623,13 +3623,7 @@ bool Player::AddSpell(uint32 spellId, bool active, bool learning, bool dependent
             else if (IsInWorld())
             {
                 if (next_active_spell_id)
-                {
-                    // update spell ranks in spellbook and action bar
-                    WorldPacket data(SMSG_SUPERCEDED_SPELL, 4 + 4);
-                    data << uint32(spellId);
-                    data << uint32(next_active_spell_id);
-                    GetSession()->SendPacket(&data);
-                }
+                    SendSupercededSpell(spellId, next_active_spell_id);
                 else
                 {
                     WorldPacket data(SMSG_REMOVED_SPELL, 4);
@@ -3726,12 +3720,7 @@ bool Player::AddSpell(uint32 spellId, bool active, bool learning, bool dependent
                         if (spellInfo->IsHighRankOf(i_spellInfo))
                         {
                             if (IsInWorld())                 // not send spell (re-/over-)learn packets at loading
-                            {
-                                WorldPacket data(SMSG_SUPERCEDED_SPELL, 4 + 4);
-                                data << uint32(itr2->first);
-                                data << uint32(spellId);
-                                GetSession()->SendPacket(&data);
-                            }
+                                SendSupercededSpell(itr2->first, spellId);
 
                             // mark old spell as disable (SMSG_SUPERCEDED_SPELL replace it in client by new)
                             itr2->second->active = false;
@@ -3742,12 +3731,7 @@ bool Player::AddSpell(uint32 spellId, bool active, bool learning, bool dependent
                         else
                         {
                             if (IsInWorld())                 // not send spell (re-/over-)learn packets at loading
-                            {
-                                WorldPacket data(SMSG_SUPERCEDED_SPELL, 4 + 4);
-                                data << uint32(spellId);
-                                data << uint32(itr2->first);
-                                GetSession()->SendPacket(&data);
-                            }
+                                SendSupercededSpell(spellId, itr2->first);
 
                             // mark new spell as disable (not learned yet for client and will not learned)
                             newspell->active = false;
@@ -4123,10 +4107,7 @@ void Player::RemoveSpell(uint32 spell_id, bool disabled, bool learn_low_rank)
                     if (AddSpell(prev_id, true, false, prev_itr->second->dependent, prev_itr->second->disabled))
                     {
                         // downgrade spell ranks in spellbook and action bar
-                        WorldPacket data(SMSG_SUPERCEDED_SPELL, 4 + 4);
-                        data << uint32(spell_id);
-                        data << uint32(prev_id);
-                        GetSession()->SendPacket(&data);
+                        SendSupercededSpell(spell_id, prev_id);
                         prev_activate = true;
                     }
                 }
@@ -4154,7 +4135,7 @@ void Player::RemoveSpell(uint32 spell_id, bool disabled, bool learn_low_rank)
 bool Player::Has310Flyer(bool checkAllSpells, uint32 excludeSpellId)
 {
     if (!checkAllSpells)
-        return m_ExtraFlags & PLAYER_EXTRA_HAS_310_FLYER;
+        return (m_ExtraFlags & PLAYER_EXTRA_HAS_310_FLYER) != 0;
     else
     {
         SetHas310Flyer(false);
@@ -7309,35 +7290,35 @@ void Player::SetArenaPoints(uint32 value)
         AddKnownCurrency(ITEM_ARENA_POINTS_ID);
 }
 
-void Player::ModifyHonorPoints(int32 value, SQLTransaction* trans /*=NULL*/)
+void Player::ModifyHonorPoints(int32 value, SQLTransaction trans)
 {
     int32 newValue = int32(GetHonorPoints()) + value;
     if (newValue < 0)
         newValue = 0;
     SetHonorPoints(uint32(newValue));
 
-    if (trans && !trans->null())
+    if (trans)
     {
         PreparedStatement* stmt = CharacterDatabase.GetPreparedStatement(CHAR_UPD_CHAR_HONOR_POINTS);
         stmt->setUInt32(0, newValue);
         stmt->setUInt32(1, GetGUIDLow());
-        (*trans)->Append(stmt);
+        trans->Append(stmt);
     }
 }
 
-void Player::ModifyArenaPoints(int32 value, SQLTransaction* trans /*=NULL*/)
+void Player::ModifyArenaPoints(int32 value, SQLTransaction trans)
 {
     int32 newValue = int32(GetArenaPoints()) + value;
     if (newValue < 0)
         newValue = 0;
     SetArenaPoints(uint32(newValue));
 
-    if (trans && !trans->null())
+    if (trans)
     {
         PreparedStatement* stmt = CharacterDatabase.GetPreparedStatement(CHAR_UPD_CHAR_ARENA_POINTS);
         stmt->setUInt32(0, newValue);
         stmt->setUInt32(1, GetGUIDLow());
-        (*trans)->Append(stmt);
+        trans->Append(stmt);
     }
 }
 
@@ -17537,7 +17518,6 @@ bool Player::LoadFromDB(uint32 guid, SQLQueryHolder *holder)
 
     if (!map)
     {
-        PlayerInfo const* info = sObjectMgr->GetPlayerInfo(getRace(), getClass());
         mapId = info->mapId;
         Relocate(info->positionX, info->positionY, info->positionZ, 0.0f);
         map = sMapMgr->CreateMap(mapId, this);
@@ -19766,7 +19746,7 @@ void Player::_SaveMail(SQLTransaction& trans)
 
 void Player::_SaveQuestStatus(SQLTransaction& trans)
 {
-    bool isTransaction = !trans.null();
+    bool isTransaction = bool(trans);
     if (!isTransaction)
         trans = CharacterDatabase.BeginTransaction();
 
@@ -21596,10 +21576,10 @@ inline bool Player::_StoreOrEquipNewItem(uint32 vendorslot, uint32 item, uint8 c
         ItemExtendedCostEntry const* iece = sItemExtendedCostStore.LookupEntry(crItem->ExtendedCost);
         ASSERT(iece);
         if (iece->reqhonorpoints)
-            ModifyHonorPoints(- int32(iece->reqhonorpoints * count));
+            ModifyHonorPoints(-int32(iece->reqhonorpoints * count));
 
         if (iece->reqarenapoints)
-            ModifyArenaPoints(- int32(iece->reqarenapoints * count));
+            ModifyArenaPoints(-int32(iece->reqarenapoints * count));
 
         for (uint8 i = 0; i < MAX_ITEM_EXTENDED_COST_REQUIREMENTS; ++i)
         {
@@ -24152,7 +24132,7 @@ uint32 Player::GetCorpseReclaimDelay(bool pvp) const
 
 void Player::UpdateCorpseReclaimDelay()
 {
-    bool pvp = m_ExtraFlags & PLAYER_EXTRA_PVP_DEATH;
+    bool pvp = (m_ExtraFlags & PLAYER_EXTRA_PVP_DEATH) != 0;
 
     if ((pvp && !sWorld->getBoolConfig(CONFIG_DEATH_CORPSE_RECLAIM_DELAY_PVP)) ||
         (!pvp && !sWorld->getBoolConfig(CONFIG_DEATH_CORPSE_RECLAIM_DELAY_PVE)))
@@ -24181,7 +24161,7 @@ int32 Player::CalculateCorpseReclaimDelay(bool load)
     if (load && !corpse)
         return -1;
 
-    bool pvp = corpse ? corpse->GetType() == CORPSE_RESURRECTABLE_PVP : m_ExtraFlags & PLAYER_EXTRA_PVP_DEATH;
+    bool pvp = corpse ? corpse->GetType() == CORPSE_RESURRECTABLE_PVP : (m_ExtraFlags & PLAYER_EXTRA_PVP_DEATH) != 0;
 
     uint32 delay;
 
@@ -26475,11 +26455,11 @@ void Player::RefundItem(Item* item)
 
     // Grant back Honor points
     if (uint32 honorRefund = iece->reqhonorpoints)
-        ModifyHonorPoints(honorRefund, &trans);
+        ModifyHonorPoints(honorRefund, trans);
 
     // Grant back Arena points
     if (uint32 arenaRefund = iece->reqarenapoints)
-        ModifyArenaPoints(arenaRefund, &trans);
+        ModifyArenaPoints(arenaRefund, trans);
 
     SaveInventoryAndGoldToDB(trans);
 
@@ -26833,3 +26813,11 @@ bool Player::IsLoading() const
 {
     return GetSession()->PlayerLoading();
 }
+
+void Player::SendSupercededSpell(uint32 oldSpell, uint32 newSpell)
+{
+    WorldPacket data(SMSG_SUPERCEDED_SPELL, 8);
+    data << uint32(oldSpell) << uint32(newSpell);
+    GetSession()->SendPacket(&data);
+}
+
