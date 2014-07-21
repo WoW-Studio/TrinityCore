@@ -18,10 +18,9 @@
 #include "ScriptMgr.h"
 #include "ScriptedCreature.h"
 #include "InstanceScript.h"
+#include "ulduar.h"
 #include "Player.h"
 #include "WorldPacket.h"
-#include "SpellScript.h"
-#include "ulduar.h"
 
 static DoorData const doorData[] =
 {
@@ -913,7 +912,7 @@ class instance_ulduar : public InstanceMapScript
                         return ElderGUIDs[1];
                     case BOSS_STONEBARK:
                         return ElderGUIDs[2];
-                    
+
                     // Mimiron
                     case BOSS_MIMIRON:
                         return MimironGUID;
