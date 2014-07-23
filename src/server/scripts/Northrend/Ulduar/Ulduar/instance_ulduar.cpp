@@ -365,7 +365,7 @@ class instance_ulduar : public InstanceMapScript
                             creature->DespawnOrUnsummon();
                          break;
 
-                    // Mimiron
+                    // Mimiron                    
                     case NPC_MIMIRON:
                         MimironGUID = creature->GetGUID();
                         break;
@@ -822,11 +822,11 @@ class instance_ulduar : public InstanceMapScript
                         break;
                     case DATA_UNBROKEN:
                         Unbroken = data != 0;
-                        break;
+                        break;                    
                     case DATA_MIMIRON_ELEVATOR:
                         if (GameObject* gameObject = instance->GetGameObject(MimironElevatorGUID))
                             gameObject->SetGoState((GOState)data);
-                         break;
+                        break;
                     case DATA_ILLUSION:
                         illusion = data;
                         break;
@@ -912,7 +912,7 @@ class instance_ulduar : public InstanceMapScript
                         return ElderGUIDs[1];
                     case BOSS_STONEBARK:
                         return ElderGUIDs[2];
-
+                    
                     // Mimiron
                     case BOSS_MIMIRON:
                         return MimironGUID;

@@ -94,7 +94,7 @@ enum UlduarNPCs
     NPC_DB_TARGET                           = 33576,
     NPC_ROCKET_MIMIRON_VISUAL               = 34050,
     NPC_WORLD_TRIGGER_MIMIRON               = 21252,
-    NPC_COMPUTER                            = 34143,	
+    NPC_COMPUTER                            = 34143,
 
     // Freya's Keepers
     NPC_IRONBRANCH                          = 32913,
@@ -316,7 +316,7 @@ enum UlduarData
     // Hodir
     DATA_HODIR_RARE_CACHE,
 
-   // Mimiron
+    // Mimiron
     DATA_LEVIATHAN_MK_II,
     DATA_VX_001,
     DATA_AERIAL_COMMAND_UNIT,
