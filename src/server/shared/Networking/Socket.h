@@ -39,8 +39,33 @@ public:
 
     virtual void Start() = 0;
 
-    boost::asio::ip::address GetRemoteIpAddress() const { return _socket.remote_endpoint().address(); };
-    uint16 GetRemotePort() const { return _socket.remote_endpoint().port(); }
+    boost::asio::ip::address GetRemoteIpAddress() const
+    {
+        boost::system::error_code error;
+        auto ep = _socket.remote_endpoint(error);
+
+        if (error)
+        {
+            TC_LOG_DEBUG("network", "Socket::GetRemoteIpAddress: errored with: %i (%s)", error.value(), error.message().c_str());
+            return boost::asio::ip::address();
+        }
+        else
+            return ep.address();
+    }
+
+    uint16 GetRemotePort() const
+    {
+        boost::system::error_code error;
+        auto ep = _socket.remote_endpoint(error);
+
+        if (error)
+        {
+            TC_LOG_DEBUG("network", "Socket::GetRemotePort: errored with: %i (%s)", error.value(), error.message().c_str());
+            return 0;
+        }
+        else
+            return ep.port();
+    }
 
     void AsyncReadHeader()
     {
@@ -56,7 +81,16 @@ public:
 
     void ReadData(std::size_t size, std::size_t bufferOffset)
     {
-        _socket.read_some(boost::asio::buffer(&_readBuffer[bufferOffset], size));
+        boost::system::error_code error;
+
+        _socket.read_some(boost::asio::buffer(&_readBuffer[bufferOffset], size), error);
+
+        if (error)
+        {
+            TC_LOG_DEBUG("network", "Socket::ReadData: %s errored with: %i (%s)", GetRemoteIpAddress().to_string().c_str(), error.value(), error.message().c_str());
+
+            CloseSocket();
+        }
     }
 
     void AsyncWrite(PacketType const& data)
@@ -68,11 +102,11 @@ public:
     bool IsOpen() const { return _socket.is_open(); }
     void CloseSocket()
     {
-        boost::system::error_code socketError;
-        _socket.close(socketError);
-        if (socketError)
+        boost::system::error_code error;
+        _socket.close(error);
+        if (error)
             TC_LOG_DEBUG("network", "Socket::CloseSocket: %s errored when closing socket: %i (%s)", GetRemoteIpAddress().to_string().c_str(),
-                socketError.value(), socketError.message().c_str());
+                error.value(), error.message().c_str());
     }
 
     uint8* GetReadBuffer() { return _readBuffer; }
