@@ -1,4 +1,4 @@
--- Fix Quest Das Feuer wird Euch läutern ID:13211
+-- Fix Quest Das Feuer wird Euch läutern ID: 13211
 SET @ENTRY := 31130;
 UPDATE `creature_template` SET `AIName`="SmartAI" WHERE `entry`=@ENTRY;
 DELETE FROM `smart_scripts` WHERE `entryorguid`=@ENTRY AND `source_type`=0;
