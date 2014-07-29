@@ -1,18 +1,3 @@
-/*
-Navicat MySQL Data Transfer
-
-Source Server         : Gods of Nation
-Source Server Version : 50156
-Source Host           : localhost:3306
-Source Database       : world335pve
-
-Target Server Type    : MYSQL
-Target Server Version : 50156
-File Encoding         : 65001
-
-Date: 2014-06-17 07:10:55
-*/
-
 SET FOREIGN_KEY_CHECKS=0;
 
 -- ----------------------------
@@ -84,3 +69,4 @@ INSERT INTO `game_event` VALUES ('62', '2012-01-01 15:00:00', '2020-12-31 06:00:
 INSERT INTO `game_event` VALUES ('63', '2012-01-07 14:00:00', '2020-12-31 06:00:00', '10080', '180', '424', 'Angelwettstreit der Kalu\'ak', '0', '2');
 INSERT INTO `game_event` VALUES ('64', '2012-01-07 15:00:00', '2020-12-31 06:00:00', '10080', '60', '0', 'Angelwettstreit der Kalu\'ak', '0', '2');
 INSERT INTO `game_event` VALUES ('26', '2013-11-24 02:00:00', '2020-12-31 06:00:00', '525600', '10020', '404', 'Nobelgartenfest', '0', '2');
+INSERT INTO `game_event` VALUES ('33', '2011-03-22 00:10:00', '2020-03-22 00:00:00', '30', '5', '0', 'Dalaran: Minigob', '0', '2');
