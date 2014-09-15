@@ -55,13 +55,16 @@ enum CreatureIds
     // Svala
     NPC_SVALA                       = 29281,
 
+    //Skadi
+    NPC_GRAUF                       = 26893,
+
     // Gortok Palehoof
     NPC_FRENZIED_WORGEN             = 26683,
     NPC_RAVENOUS_FURBOLG            = 26684,
     NPC_MASSIVE_JORMUNGAR           = 26685,
     NPC_FEROCIOUS_RHINO             = 26686,
     NPC_PALEHOOF_ORB                = 26688,
-    NPC_GRAUF                       = 26893
+    
     // Ymiron
     NPC_BJORN                       = 27303,
     NPC_BJORN_VISUAL                = 27304,
