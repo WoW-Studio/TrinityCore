@@ -16,25 +16,26 @@
 * with this program. If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include <memory>
 #include "WorldSocket.h"
 #include "BigNumber.h"
 #include "Opcodes.h"
+#include "Player.h"
 #include "ScriptMgr.h"
 #include "SHA1.h"
 #include "PacketLog.h"
+#include <memory>
 
 using boost::asio::ip::tcp;
 
 WorldSocket::WorldSocket(tcp::socket&& socket)
-    : Socket(std::move(socket), sizeof(ClientPktHeader)), _authSeed(rand32()), _OverSpeedPings(0), _worldSession(nullptr)
+    : Socket(std::move(socket)), _authSeed(rand32()), _OverSpeedPings(0), _worldSession(nullptr)
 {
+    _headerBuffer.Resize(sizeof(ClientPktHeader));
 }
 
 void WorldSocket::Start()
 {
-    sScriptMgr->OnSocketOpen(shared_from_this());
-    AsyncReadHeader();
+    AsyncRead();
     HandleSendAuthSession();
 }
 
@@ -52,31 +53,102 @@ void WorldSocket::HandleSendAuthSession()
     seed2.SetRand(16 * 8);
     packet.append(seed2.AsByteArray(16).get(), 16);               // new encryption seeds
 
-    AsyncWrite(packet);
+    SendPacket(packet);
 }
 
-void WorldSocket::ReadHeaderHandler()
+void WorldSocket::ReadHandler()
 {
-    _authCrypt.DecryptRecv(GetHeaderBuffer(), sizeof(ClientPktHeader));
+    if (!IsOpen())
+        return;
 
-    ClientPktHeader* header = reinterpret_cast<ClientPktHeader*>(GetHeaderBuffer());
+    MessageBuffer& packet = GetReadBuffer();
+    while (packet.GetActiveSize() > 0)
+    {
+        if (_headerBuffer.GetRemainingSpace() > 0)
+        {
+            // need to receive the header
+            std::size_t readHeaderSize = std::min(packet.GetActiveSize(), _headerBuffer.GetRemainingSpace());
+            _headerBuffer.Write(packet.GetReadPointer(), readHeaderSize);
+            packet.ReadCompleted(readHeaderSize);
+
+            if (_headerBuffer.GetRemainingSpace() > 0)
+            {
+                // Couldn't receive the whole header this time.
+                ASSERT(packet.GetActiveSize() == 0);
+                break;
+            }
+
+            // We just received nice new header
+            if (!ReadHeaderHandler())
+                return;
+        }
+
+        // We have full read header, now check the data payload
+        if (_packetBuffer.GetRemainingSpace() > 0)
+        {
+            // need more data in the payload
+            std::size_t readDataSize = std::min(packet.GetActiveSize(), _packetBuffer.GetRemainingSpace());
+            _packetBuffer.Write(packet.GetReadPointer(), readDataSize);
+            packet.ReadCompleted(readDataSize);
+
+            if (_packetBuffer.GetRemainingSpace() > 0)
+            {
+                // Couldn't receive the whole data this time.
+                ASSERT(packet.GetActiveSize() == 0);
+                break;
+            }
+        }
+
+        // just received fresh new payload
+        if (!ReadDataHandler())
+            return;
+
+        _headerBuffer.Reset();
+    }
+
+    AsyncRead();
+}
+
+bool WorldSocket::ReadHeaderHandler()
+{
+    ASSERT(_headerBuffer.GetActiveSize() == sizeof(ClientPktHeader));
+
+    _authCrypt.DecryptRecv(_headerBuffer.GetReadPointer(), sizeof(ClientPktHeader));
+
+    ClientPktHeader* header = reinterpret_cast<ClientPktHeader*>(_headerBuffer.GetReadPointer());
     EndianConvertReverse(header->size);
     EndianConvert(header->cmd);
 
-    AsyncReadData(header->size - sizeof(header->cmd));
-}
+    if (!header->IsValidSize() || !header->IsValidOpcode())
+    {
+        if (_worldSession)
+        {
+            Player* player = _worldSession->GetPlayer();
+            TC_LOG_ERROR("network", "WorldSocket::ReadHeaderHandler(): client (account: %u, char [GUID: %u, name: %s]) sent malformed packet (size: %hu, cmd: %u)",
+                _worldSession->GetAccountId(), player ? player->GetGUIDLow() : 0, player ? player->GetName().c_str() : "<none>", header->size, header->cmd);
+        }
+        else
+            TC_LOG_ERROR("network", "WorldSocket::ReadHeaderHandler(): client %s sent malformed packet (size: %hu, cmd: %u)",
+                GetRemoteIpAddress().to_string().c_str(), header->size, header->cmd);
 
-void WorldSocket::ReadDataHandler()
-{
-    ClientPktHeader* header = reinterpret_cast<ClientPktHeader*>(GetHeaderBuffer());
+        CloseSocket();
+        return false;
+    }
 
     header->size -= sizeof(header->cmd);
+    _packetBuffer.Resize(header->size);
+    return true;
+}
+
+bool WorldSocket::ReadDataHandler()
+{
+    ClientPktHeader* header = reinterpret_cast<ClientPktHeader*>(_headerBuffer.GetReadPointer());
 
     uint16 opcode = uint16(header->cmd);
 
     std::string opcodeName = GetOpcodeNameForLogging(opcode);
 
-    WorldPacket packet(opcode, MoveData());
+    WorldPacket packet(opcode, std::move(_packetBuffer));
 
     if (sPacketLog->CanLogPacket())
         sPacketLog->LogPacket(packet, CLIENT_TO_SERVER, GetRemoteIpAddress(), GetRemotePort());
@@ -106,7 +178,8 @@ void WorldSocket::ReadDataHandler()
             if (!_worldSession)
             {
                 TC_LOG_ERROR("network.opcode", "ProcessIncoming: Client not authed opcode = %u", uint32(opcode));
-                break;
+                CloseSocket();
+                return false;
             }
 
             // Our Idle timer will reset on any non PING opcodes.
@@ -119,10 +192,10 @@ void WorldSocket::ReadDataHandler()
         }
     }
 
-    AsyncReadHeader();
+    return true;
 }
 
-void WorldSocket::AsyncWrite(WorldPacket& packet)
+void WorldSocket::SendPacket(WorldPacket& packet)
 {
     if (!IsOpen())
         return;
@@ -134,15 +207,27 @@ void WorldSocket::AsyncWrite(WorldPacket& packet)
 
     ServerPktHeader header(packet.size() + 2, packet.GetOpcode());
 
-    std::lock_guard<std::mutex> guard(_writeLock);
+    std::unique_lock<std::mutex> guard(_writeLock);
 
-    bool needsWriteStart = _writeQueue.empty();
     _authCrypt.EncryptSend(header.header, header.getHeaderLength());
 
-    _writeQueue.emplace(header, packet);
+#ifndef BOOST_ASIO_HAS_IOCP
+    if (_writeQueue.empty() && _writeBuffer.GetRemainingSpace() >= header.getHeaderLength() + packet.size())
+    {
+        _writeBuffer.Write(header.header, header.getHeaderLength());
+        if (!packet.empty())
+            _writeBuffer.Write(packet.contents(), packet.size());
+    }
+    else
+#endif
+    {
+        MessageBuffer buffer(header.getHeaderLength() + packet.size());
+        buffer.Write(header.header, header.getHeaderLength());
+        if (!packet.empty())
+            buffer.Write(packet.contents(), packet.size());
 
-    if (needsWriteStart)
-        AsyncWrite(_writeQueue.front());
+        QueuePacket(std::move(buffer), guard);
+    }
 }
 
 void WorldSocket::HandleAuthSession(WorldPacket& recvPacket)
@@ -155,35 +240,30 @@ void WorldSocket::HandleAuthSession(WorldPacket& recvPacket)
     std::string account;
     SHA1Hash sha;
     uint32 clientBuild;
-    uint32 unk2, unk3, unk5, unk6, unk7;
+    uint32 serverId, loginServerType, region, battlegroup, realmIndex;
     uint64 unk4;
     WorldPacket packet, SendAddonPacked;
     BigNumber k;
     bool wardenActive = sWorld->getBoolConfig(CONFIG_WARDEN_ENABLED);
 
-    if (sWorld->IsClosed())
-    {
-        SendAuthResponseError(AUTH_REJECT);
-        TC_LOG_ERROR("network", "WorldSocket::HandleAuthSession: World closed, denying client (%s).", GetRemoteIpAddress().to_string().c_str());
-        return;
-    }
-
     // Read the content of the packet
     recvPacket >> clientBuild;
-    recvPacket >> unk2;
+    recvPacket >> serverId;                 // Used for GRUNT only
     recvPacket >> account;
-    recvPacket >> unk3;
+    recvPacket >> loginServerType;          // 0 GRUNT, 1 Battle.net
     recvPacket >> clientSeed;
-    recvPacket >> unk5 >> unk6 >> unk7;
+    recvPacket >> region >> battlegroup;    // Used for Battle.net only
+    recvPacket >> realmIndex;               // realmId from auth_database.realmlist table
     recvPacket >> unk4;
     recvPacket.read(digest, 20);
 
-    TC_LOG_DEBUG("network", "WorldSocket::HandleAuthSession: client %u, unk2 %u, account %s, unk3 %u, clientseed %u",
+    TC_LOG_INFO("network", "WorldSocket::HandleAuthSession: client %u, serverId %u, account %s, loginServerType %u, clientseed %u, realmIndex %u",
         clientBuild,
-        unk2,
+        serverId,
         account.c_str(),
-        unk3,
-        clientSeed);
+        loginServerType,
+        clientSeed,
+        realmIndex);
 
     // Get the account information from the auth database
     //         0           1        2       3          4         5       6          7   8
@@ -200,6 +280,7 @@ void WorldSocket::HandleAuthSession(WorldPacket& recvPacket)
         // We can not log here, as we do not know the account. Thus, no accountId.
         SendAuthResponseError(AUTH_UNKNOWN_ACCOUNT);
         TC_LOG_ERROR("network", "WorldSocket::HandleAuthSession: Sent Auth Response (unknown account).");
+        DelayedCloseSocket();
         return;
     }
 
@@ -225,6 +306,57 @@ void WorldSocket::HandleAuthSession(WorldPacket& recvPacket)
     // id has to be fetched at this point, so that first actual account response that fails can be logged
     id = fields[0].GetUInt32();
 
+    k.SetHexStr(fields[1].GetCString());
+
+    // even if auth credentials are bad, try using the session key we have - client cannot read auth response error without it
+    _authCrypt.Init(&k);
+
+    // First reject the connection if packet contains invalid data or realm state doesn't allow logging in
+    if (sWorld->IsClosed())
+    {
+        SendAuthResponseError(AUTH_REJECT);
+        TC_LOG_ERROR("network", "WorldSocket::HandleAuthSession: World closed, denying client (%s).", GetRemoteIpAddress().to_string().c_str());
+        DelayedCloseSocket();
+        return;
+    }
+
+    if (realmIndex != realmID)
+    {
+        SendAuthResponseError(REALM_LIST_REALM_NOT_FOUND);
+        TC_LOG_ERROR("network", "WorldSocket::HandleAuthSession: Sent Auth Response (bad realm).");
+        DelayedCloseSocket();
+        return;
+    }
+
+    std::string os = fields[8].GetString();
+
+    // Must be done before WorldSession is created
+    if (wardenActive && os != "Win" && os != "OSX")
+    {
+        SendAuthResponseError(AUTH_REJECT);
+        TC_LOG_ERROR("network", "WorldSocket::HandleAuthSession: Client %s attempted to log in using invalid client OS (%s).", address.c_str(), os.c_str());
+        DelayedCloseSocket();
+        return;
+    }
+
+    // Check that Key and account name are the same on client and server
+    uint32 t = 0;
+
+    sha.UpdateData(account);
+    sha.UpdateData((uint8*)&t, 4);
+    sha.UpdateData((uint8*)&clientSeed, 4);
+    sha.UpdateData((uint8*)&_authSeed, 4);
+    sha.UpdateBigNumbers(&k, NULL);
+    sha.Finalize();
+
+    if (memcmp(sha.GetDigest(), digest, 20))
+    {
+        SendAuthResponseError(AUTH_FAILED);
+        TC_LOG_ERROR("network", "WorldSocket::HandleAuthSession: Authentication failed for account: %u ('%s') address: %s", id, account.c_str(), address.c_str());
+        DelayedCloseSocket();
+        return;
+    }
+
     ///- Re-check ip locking (same check as in auth).
     if (fields[3].GetUInt8() == 1) // if ip is locked
     {
@@ -234,11 +366,10 @@ void WorldSocket::HandleAuthSession(WorldPacket& recvPacket)
             TC_LOG_DEBUG("network", "WorldSocket::HandleAuthSession: Sent Auth Response (Account IP differs. Original IP: %s, new IP: %s).", fields[2].GetCString(), address.c_str());
             // We could log on hook only instead of an additional db log, however action logger is config based. Better keep DB logging as well
             sScriptMgr->OnFailedAccountLogin(id);
+            DelayedCloseSocket();
             return;
         }
     }
-
-    k.SetHexStr(fields[1].GetCString());
 
     int64 mutetime = fields[5].GetInt64();
     //! Negative mutetime indicates amount of seconds to be muted effective on next login - which is now.
@@ -259,16 +390,6 @@ void WorldSocket::HandleAuthSession(WorldPacket& recvPacket)
         locale = LOCALE_enUS;
 
     uint32 recruiter = fields[7].GetUInt32();
-    std::string os = fields[8].GetString();
-
-    // Must be done before WorldSession is created
-    if (wardenActive && os != "Win" && os != "OSX")
-    {
-        SendAuthResponseError(AUTH_REJECT);
-        TC_LOG_ERROR("network", "WorldSocket::HandleAuthSession: Client %s attempted to log in using invalid client OS (%s).", address.c_str(), os.c_str());
-        return;
-    }
-
     // Checks gmlevel per Realm
     stmt = LoginDatabase.GetPreparedStatement(LOGIN_GET_GMLEVEL_BY_REALMID);
 
@@ -298,6 +419,7 @@ void WorldSocket::HandleAuthSession(WorldPacket& recvPacket)
         SendAuthResponseError(AUTH_BANNED);
         TC_LOG_ERROR("network", "WorldSocket::HandleAuthSession: Sent Auth Response (Account banned).");
         sScriptMgr->OnFailedAccountLogin(id);
+        DelayedCloseSocket();
         return;
     }
 
@@ -309,23 +431,7 @@ void WorldSocket::HandleAuthSession(WorldPacket& recvPacket)
         SendAuthResponseError(AUTH_UNAVAILABLE);
         TC_LOG_INFO("network", "WorldSocket::HandleAuthSession: User tries to login but his security level is not enough");
         sScriptMgr->OnFailedAccountLogin(id);
-        return;
-    }
-
-    // Check that Key and account name are the same on client and server
-    uint32 t = 0;
-
-    sha.UpdateData(account);
-    sha.UpdateData((uint8*)&t, 4);
-    sha.UpdateData((uint8*)&clientSeed, 4);
-    sha.UpdateData((uint8*)&_authSeed, 4);
-    sha.UpdateBigNumbers(&k, NULL);
-    sha.Finalize();
-
-    if (memcmp(sha.GetDigest(), digest, 20))
-    {
-        SendAuthResponseError(AUTH_FAILED);
-        TC_LOG_ERROR("network", "WorldSocket::HandleAuthSession: Authentication failed for account: %u ('%s') address: %s", id, account.c_str(), address.c_str());
+        DelayedCloseSocket();
         return;
     }
 
@@ -352,18 +458,14 @@ void WorldSocket::HandleAuthSession(WorldPacket& recvPacket)
 
     LoginDatabase.Execute(stmt);
 
-    // NOTE ATM the socket is single-threaded, have this in mind ...
+    // At this point, we can safely hook a successful login
+    sScriptMgr->OnAccountLogin(id);
+
     _worldSession = new WorldSession(id, shared_from_this(), AccountTypes(security), expansion, mutetime, locale, recruiter, isRecruiter);
-
-    _authCrypt.Init(&k);
-
     _worldSession->LoadGlobalAccountData();
     _worldSession->LoadTutorialsData();
     _worldSession->ReadAddonsInfo(recvPacket);
     _worldSession->LoadPermissions();
-
-    // At this point, we can safely hook a successful login
-    sScriptMgr->OnAccountLogin(id);
 
     // Initialize Warden system only if it is enabled by config
     if (wardenActive)
@@ -377,7 +479,7 @@ void WorldSocket::SendAuthResponseError(uint8 code)
     WorldPacket packet(SMSG_AUTH_RESPONSE, 1);
     packet << uint8(code);
 
-    AsyncWrite(packet);
+    SendPacket(packet);
 }
 
 void WorldSocket::HandlePing(WorldPacket& recvPacket)
@@ -438,12 +540,5 @@ void WorldSocket::HandlePing(WorldPacket& recvPacket)
 
     WorldPacket packet(SMSG_PONG, 4);
     packet << ping;
-    return AsyncWrite(packet);
-}
-
-void WorldSocket::CloseSocket()
-{
-    sScriptMgr->OnSocketClose(shared_from_this());
-
-    Socket::CloseSocket();
+    return SendPacket(packet);
 }
