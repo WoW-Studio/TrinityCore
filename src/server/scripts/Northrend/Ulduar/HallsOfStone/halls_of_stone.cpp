@@ -90,6 +90,7 @@ enum Creatures
     NPC_TRIBUNAL_OF_THE_AGES       = 28234,
     NPC_BRANN_BRONZEBEARD          = 28070,
     NPC_DARK_MATTER_TARGET         = 28237,
+    NPC_DARK_MATTER                = 28235,
     NPC_SEARING_GAZE_TARGET        = 28265,
     NPC_DARK_RUNE_PROTECTOR        = 27983,
     NPC_DARK_RUNE_STORMCALLER      = 27984,
@@ -105,6 +106,8 @@ enum Spells
 
     // Marnak
     SPELL_DARK_MATTER                   = 51012,
+    SPELL_DARK_MATTER_AURA              = 51000,
+    SPELL_DARK_MATTER_VISUAL            = 51001,
 
     // Abedneum
     SPELL_SEARING_GAZE                  = 51136,
@@ -117,7 +120,6 @@ enum Misc
     QUEST_HALLS_OF_STONE                = 13207,
 
     DATA_BRANN_SPARKLIN_NEWS            = 1
-
 };
 
 #define GOSSIP_ITEM_START               "Brann, it would be our honor!"
@@ -127,6 +129,7 @@ static Position SpawnLocations[]=
 {
     {946.992f, 397.016f, 208.374f, 0.0f},
     {960.748f, 382.944f, 208.374f, 0.0f},
+    {900.109f, 356.481f, 214.401f, 0.0f}, //Dunkle Materie
 };
 
 class npc_tribuna_controller : public CreatureScript
@@ -164,7 +167,7 @@ public:
         bool bMarnakActivated;
         bool bAbedneumActivated;
 
-        std::list<uint64> KaddrakGUIDList;
+        std::list<Creature*> KaddrakList;
 
         void Reset() override
         {
@@ -175,33 +178,13 @@ public:
             instance->HandleGameObject(instance->GetData64(DATA_GO_ABEDNEUM), false);
             instance->HandleGameObject(instance->GetData64(DATA_GO_SKY_FLOOR), false);
 
-            KaddrakGUIDList.clear();
+            KaddrakList.clear();
         }
 
         void UpdateFacesList()
         {
-            /*GetCreatureListWithEntryInGrid(lKaddrakGUIDList, me, CREATURE_KADDRAK, 50.0f);
-            if (!lKaddrakGUIDList.empty())
-            {
-                uint32 uiPositionCounter = 0;
-                for (std::list<Creature*>::const_iterator itr = lKaddrakGUIDList.begin(); itr != lKaddrakGUIDList.end(); ++itr)
-                {
-                    if ((*itr)->IsAlive())
-                    {
-                        if (uiPositionCounter == 0)
-                        {
-                            (*itr)->GetMap()->CreatureRelocation((*itr), 927.265f, 333.200f, 218.780f, (*itr)->GetOrientation());
-                            (*itr)->SendMonsterMove(927.265f, 333.200f, 218.780f, 0, (*itr)->GetMovementFlags(), 1);
-                        }
-                        else
-                        {
-                            (*itr)->GetMap()->CreatureRelocation((*itr), 921.745f, 328.076f, 218.780f, (*itr)->GetOrientation());
-                            (*itr)->SendMonsterMove(921.745f, 328.076f, 218.780f, 0, (*itr)->GetMovementFlags(), 1);
-                        }
-                    }
-                    ++uiPositionCounter;
-                }
-            }*/
+            me->GetCreatureListWithEntryInGrid(KaddrakList, NPC_KADDRAK, 80.0f);
+            DoZoneInCombat();
         }
 
         void UpdateAI(uint32 diff) override
@@ -210,48 +193,47 @@ public:
             {
                 if (uiKaddrakEncounterTimer <= diff)
                 {
-                    if (Unit* target = SelectTarget(SELECT_TARGET_RANDOM, 0, 100, true))
-                        if (!KaddrakGUIDList.empty())
-                            for (std::list<uint64>::const_iterator itr = KaddrakGUIDList.begin(); itr != KaddrakGUIDList.end(); ++itr)
+                    if (!KaddrakList.empty())
+                    {
+                        for (std::list<Creature*>::const_iterator itr = KaddrakList.begin(); itr != KaddrakList.end(); ++itr)
+                        {
+                            if (Creature* kaddrak = *itr)
                             {
-                                if (Creature* pKaddrak = ObjectAccessor::GetCreature(*me, *itr))
-                                {
-                                    if (pKaddrak->IsAlive())
-                                        pKaddrak->CastSpell(target, SPELL_GLARE_OF_THE_TRIBUNAL, true);
-                                }
+                                if (kaddrak)
+                                    kaddrak->GetAI()->DoCastAOE(SPELL_GLARE_OF_THE_TRIBUNAL);
                             }
+                        }
+                    }                       
                     uiKaddrakEncounterTimer = 1500;
                 } else uiKaddrakEncounterTimer -= diff;
             }
+
             if (bMarnakActivated)
             {
                 if (uiMarnakEncounterTimer <= diff)
                 {
-                    if (Unit* target = SelectTarget(SELECT_TARGET_RANDOM, 0, 100, true))
+                    if (Unit* target = SelectTarget(SELECT_TARGET_RANDOM))
                     {
-                        if (Creature* summon = me->SummonCreature(NPC_DARK_MATTER_TARGET, target->GetPositionX(), target->GetPositionY(), target->GetPositionZ(), 0.0f, TEMPSUMMON_TIMED_DESPAWN, 1000))
-                        {
-                            summon->SetDisplayId(11686);
-                            summon->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
-                            summon->CastSpell(target, SPELL_DARK_MATTER, true);
-                        }
+                        me->SummonCreature(NPC_DARK_MATTER_TARGET, target->GetPositionX(), target->GetPositionY(), target->GetPositionZ(), 0.0f, TEMPSUMMON_TIMED_DESPAWN, 60000);
+
+                        if (Unit* darkMatter = DoSummon(NPC_DARK_MATTER, SpawnLocations[2], 20000))
+                            darkMatter->GetAI()->DoCast(SPELL_DARK_MATTER_VISUAL);
                     }
                     uiMarnakEncounterTimer = urand(30000, 31000);
                 } else uiMarnakEncounterTimer -= diff;
             }
+
             if (bAbedneumActivated)
             {
                 if (uiAbedneumEncounterTimer <= diff)
                 {
-                    if (Unit* target = SelectTarget(SELECT_TARGET_RANDOM, 0, 100, true))
+
+                    if (Unit* target = SelectTarget(SELECT_TARGET_RANDOM))
                     {
-                        if (Creature* summon = me->SummonCreature(NPC_SEARING_GAZE_TARGET, target->GetPositionX(), target->GetPositionY(), target->GetPositionZ(), 0.0f, TEMPSUMMON_TIMED_DESPAWN, 1000))
-                        {
-                            summon->SetDisplayId(11686);
-                            summon->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
-                            summon->CastSpell(target, SPELL_SEARING_GAZE, true);
-                        }
+                        if (Creature* searingGazeTarget = me->SummonCreature(NPC_SEARING_GAZE_TARGET, target->GetPositionX(), target->GetPositionY(), target->GetPositionZ(), 0.0f, TEMPSUMMON_TIMED_DESPAWN, 8000))
+                            searingGazeTarget->GetAI()->DoCast(SPELL_SEARING_GAZE);
                     }
+
                     uiAbedneumEncounterTimer = urand(30000, 31000);
                 } else uiAbedneumEncounterTimer -= diff;
             }
@@ -261,6 +243,72 @@ public:
     CreatureAI* GetAI(Creature* creature) const override
     {
         return GetHallsOfStoneAI<npc_tribuna_controllerAI>(creature);
+    }
+};
+
+class npc_dark_matter : public CreatureScript
+{
+public:
+    npc_dark_matter() : CreatureScript("npc_dark_matter") { }
+
+    struct npc_dark_matterAI : public ScriptedAI
+    {
+        npc_dark_matterAI(Creature* creature) : ScriptedAI(creature) 
+        { 
+            Initialize();
+        }
+
+        void Initialize()
+        {
+            startMoveTimer = 5000;
+            reapplyAuraTimer = 8000;
+
+            darkMatterTarget = me->FindNearestCreature(NPC_DARK_MATTER_TARGET, 100.0f, true);  
+        }
+
+        uint32 startMoveTimer;
+        uint32 reapplyAuraTimer;
+        Unit* darkMatterTarget;
+
+        void UpdateAI(uint32 diff) override
+        {
+            if (startMoveTimer <= diff)
+            {
+                if (darkMatterTarget)
+                {
+                    me->GetMotionMaster()->MoveChase(darkMatterTarget);
+                    DoCast(me, SPELL_DARK_MATTER_AURA);
+                    me->SetObjectScale(0.5f);
+                }
+                else
+                    me->DespawnOrUnsummon();
+            }
+            else startMoveTimer -= diff;
+
+            if (reapplyAuraTimer <= diff)
+            {
+                me->RemoveAura(SPELL_DARK_MATTER_AURA);
+                DoCast(me, SPELL_DARK_MATTER_AURA);
+                me->SetObjectScale(0.5f);
+                reapplyAuraTimer = 3000;
+            }
+            else reapplyAuraTimer -= diff;
+
+            if (darkMatterTarget)
+            {
+                if (me->GetDistance2d(darkMatterTarget) < 1.0f)
+                {
+                    DoCastAOE(SPELL_DARK_MATTER, true);
+                    me->DespawnOrUnsummon();
+                    darkMatterTarget->ToCreature()->DespawnOrUnsummon();
+                }
+            }
+        }
+    };
+
+    CreatureAI* GetAI(Creature* creature) const override
+    {
+        return GetHallsOfStoneAI<npc_dark_matterAI>(creature);
     }
 };
 
@@ -386,16 +434,16 @@ public:
                {
                    uint32 uiSpawnNumber = DUNGEON_MODE(2, 3);
                    for (uint8 i = 0; i < uiSpawnNumber; ++i)
-                       me->SummonCreature(NPC_DARK_RUNE_PROTECTOR, SpawnLocations[0], TEMPSUMMON_CORPSE_TIMED_DESPAWN, 30000);
-                   me->SummonCreature(NPC_DARK_RUNE_STORMCALLER, SpawnLocations[0], TEMPSUMMON_CORPSE_TIMED_DESPAWN, 30000);
+                       me->SummonCreature(NPC_DARK_RUNE_PROTECTOR, SpawnLocations[0], TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 30000);
+                   me->SummonCreature(NPC_DARK_RUNE_STORMCALLER, SpawnLocations[0], TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 30000);
                    break;
                }
                case 2:
                    for (uint8 i = 0; i < 2; ++i)
-                       me->SummonCreature(NPC_DARK_RUNE_STORMCALLER, SpawnLocations[0], TEMPSUMMON_CORPSE_TIMED_DESPAWN, 30000);
+                       me->SummonCreature(NPC_DARK_RUNE_STORMCALLER, SpawnLocations[0], TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 30000);
                    break;
                case 3:
-                   me->SummonCreature(NPC_IRON_GOLEM_CUSTODIAN, SpawnLocations[0], TEMPSUMMON_CORPSE_TIMED_DESPAWN, 30000);
+                   me->SummonCreature(NPC_IRON_GOLEM_CUSTODIAN, SpawnLocations[0], TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 30000);
                    break;
            }
          }
@@ -574,16 +622,19 @@ public:
                         Talk(SAY_EVENT_END_01);
                         me->SetStandState(UNIT_STAND_STATE_STAND);
                         instance->HandleGameObject(instance->GetData64(DATA_GO_SKY_FLOOR), true);
+
                         if (Creature* temp = ObjectAccessor::GetCreature(*me, uiControllerGUID))
                             temp->DealDamage(temp, temp->GetHealth(), NULL, DIRECT_DAMAGE, SPELL_SCHOOL_MASK_NORMAL, NULL, false);
+
+                        instance->SetBossState(DATA_BRANN_EVENT, DONE);
+                        me->CastSpell(me, SPELL_REWARD_ACHIEVEMENT, true);
+
                         bIsBattle = true;
                         SetEscortPaused(false);
                         JumpToNextStep(6500);
                         break;
                     case 29:
                         Talk(SAY_EVENT_END_02);
-                        instance->SetBossState(DATA_BRANN_EVENT, DONE);
-                        me->CastSpell(me, SPELL_REWARD_ACHIEVEMENT, true);
                         JumpToNextStep(5500);
                         break;
                     case 30:
@@ -737,4 +788,5 @@ void AddSC_halls_of_stone()
     new npc_brann_hos();
     new npc_tribuna_controller();
     new achievement_brann_spankin_new();
+    new npc_dark_matter();
 }

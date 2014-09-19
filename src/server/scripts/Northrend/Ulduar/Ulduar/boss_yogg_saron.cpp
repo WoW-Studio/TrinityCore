@@ -439,7 +439,6 @@ class boss_voice_of_yogg_saron : public CreatureScript
             }
 
             void MoveInLineOfSight(Unit* who) override
-
             {
                 // TODO: MoveInLineOfSight doesn't work for such a big distance
                 if (who->GetTypeId() == TYPEID_PLAYER && me->GetDistance2d(who) < 99.0f && !me->IsInCombat())

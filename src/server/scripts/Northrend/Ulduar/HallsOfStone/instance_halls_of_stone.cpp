@@ -176,7 +176,7 @@ class instance_halls_of_stone : public InstanceMapScript
                         if (state == DONE)
                         {
                             if (GameObject* go = instance->GetGameObject(TribunalChestGUID))
-                                go->RemoveFlag(GAMEOBJECT_FLAGS,GO_FLAG_INTERACT_COND);
+                                go->RemoveFlag(GAMEOBJECT_FLAGS, GO_FLAG_INTERACT_COND);
                         }
                         break;
                     default:
