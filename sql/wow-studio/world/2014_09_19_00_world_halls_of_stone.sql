@@ -24,7 +24,7 @@ DELETE FROM `conditions` WHERE `SourceTypeOrReferenceId` = 13 AND `SourceEntry` 
 INSERT INTO `conditions` (`SourceTypeOrReferenceId`, `SourceGroup`, `SourceEntry`, `SourceId`, `ElseGroup`, `ConditionTypeOrReference`, `ConditionTarget`, `ConditionValue1`, `ConditionValue2`, `ConditionValue3`, `NegativeCondition`, `ErrorType`, `ErrorTextId`, `ScriptName`, `Comment`) VALUES (13, 1, 59867, 0, 0, 31, 0, 3, 30899, 0, 0, 0, 0, '', 'Spell 59867 (EFFECT_0) only hits Abedneum - Heroic');
 
 -- Dark Matter
-UPDATE `creature_template` SET `ScriptName` = 'npc_dark_matter';
+UPDATE `creature_template` SET `ScriptName` = 'npc_dark_matter' WHERE `entry` = 28235;
 
 -- Abedneum (creature_template)
 UPDATE `creature_template` SET `InhabitType` = 4, `flags_extra` = 130 WHERE `entry` = 30899;
