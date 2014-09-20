@@ -27,4 +27,4 @@ INSERT INTO `conditions` (`SourceTypeOrReferenceId`, `SourceGroup`, `SourceEntry
 UPDATE `creature_template` SET `ScriptName` = 'npc_dark_matter';
 
 -- Abedneum (creature_template)
-UPDATE `creature_template` SET `InhabitType` = 4, `flags_extra` = 130;
+UPDATE `creature_template` SET `InhabitType` = 4, `flags_extra` = 130 WHERE `entry` = 30899;
