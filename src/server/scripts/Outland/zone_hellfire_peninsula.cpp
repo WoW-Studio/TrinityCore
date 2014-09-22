@@ -479,14 +479,13 @@ public:
         EventMap events;
         uint8 step;
         Creature* jules;
-        uint64 playerGUID;
+        ObjectGuid playerGUID;
 
         void Reset() override
         {
             events.Reset();
             step = 0;
 
-            playerGUID = 0;
             me->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_PACIFIED);
         }
 
@@ -678,7 +677,7 @@ public:
                                 if (playerGUID)
                                 {
                                     if (Player* player = ObjectAccessor::FindPlayer(playerGUID))
-                                        player->KilledMonsterCredit(NPC_COLONEL_JULES, 0);
+                                        player->KilledMonsterCredit(NPC_COLONEL_JULES);
                                 }
 
                                 if (jules)

@@ -288,7 +288,7 @@ public:
             {
                 if (instance)
                 {
-                    if (Creature* ionar = ObjectAccessor::GetCreature(*me, instance->GetData64(DATA_IONAR)))
+                    if (Creature* ionar = ObjectAccessor::GetCreature(*me, instance->GetGuidData(DATA_IONAR)))
                     {
                         if (me->GetDistance(ionar) > 50.0f)
                         {

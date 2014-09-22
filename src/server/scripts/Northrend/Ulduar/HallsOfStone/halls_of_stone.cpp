@@ -167,23 +167,23 @@ public:
         bool bMarnakActivated;
         bool bAbedneumActivated;
 
-        GuidList KaddrakGUIDList;
+        std::list<Creature*> KaddrakList;
 
         void Reset() override
         {
             Initialize();
 
-            instance->HandleGameObject(instance->GetData(DATA_GO_KADDRAK), false);
-            instance->HandleGameObject(instance->GetData(DATA_GO_MARNAK), false);
-            instance->HandleGameObject(instance->GetData(DATA_GO_ABEDNEUM), false);
-            instance->HandleGameObject(instance->GetData(DATA_GO_SKY_FLOOR), false);
+            instance->HandleGameObject(instance->GetGuidData(DATA_GO_KADDRAK), false);
+            instance->HandleGameObject(instance->GetGuidData(DATA_GO_MARNAK), false);
+            instance->HandleGameObject(instance->GetGuidData(DATA_GO_ABEDNEUM), false);
+            instance->HandleGameObject(instance->GetGuidData(DATA_GO_SKY_FLOOR), false);
 
-            KaddrakGUIDList.clear();
+            KaddrakList.clear();
         }
 
         void UpdateFacesList()
         {
-            me->GetCreatureListWithEntryInGrid(KaddrakGUIDList, NPC_KADDRAK, 80.0f);
+            me->GetCreatureListWithEntryInGrid(KaddrakList, NPC_KADDRAK, 80.0f);
             DoZoneInCombat();
         }
 
@@ -193,9 +193,9 @@ public:
             {
                 if (uiKaddrakEncounterTimer <= diff)
                 {
-                    if (!KaddrakGUIDList.empty())
+                    if (!KaddrakList.empty())
                     {
-                        for (GuidList::const_iterator itr = KaddrakGUIDList.begin(); itr != KaddrakGUIDList.end(); ++itr)
+                        for (std::list<Creature*>::const_iterator itr = KaddrakList.begin(); itr != KaddrakList.end(); ++itr)
                         {
                             if (Creature* kaddrak = *itr)
                             {

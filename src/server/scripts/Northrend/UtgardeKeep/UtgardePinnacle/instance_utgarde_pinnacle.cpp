@@ -38,8 +38,6 @@ class instance_utgarde_pinnacle : public InstanceMapScript
                 SetHeaders(DataHeader);
                 SetBossNumber(EncounterCount);
                 LoadDoorData(doorData);
-
-			    GraufGUID                   = 0;
             }
 
             void OnCreatureCreate(Creature* creature) override
@@ -191,7 +189,7 @@ class instance_utgarde_pinnacle : public InstanceMapScript
             ObjectGuid SvalaGUID;
             ObjectGuid SacrificedPlayerGUID;
 
-		    uint64 GraufGUID;
+            ObjectGuid GraufGUID;
         };
 
         InstanceScript* GetInstanceScript(InstanceMap* map) const override

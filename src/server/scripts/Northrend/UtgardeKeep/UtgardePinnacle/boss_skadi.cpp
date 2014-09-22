@@ -195,7 +195,7 @@ public:
 
             if (instance)
             {
-                if (Creature* grauf = ObjectAccessor::GetCreature(*me, instance->GetData64(DATA_GRAUF)))
+                if (Creature* grauf = ObjectAccessor::GetCreature(*me, instance->GetGuidData(DATA_GRAUF)))
                 {
                     if (grauf->isDead())
                     {
@@ -241,7 +241,7 @@ public:
             {
                 if (instance)
                 {
-                    if (Creature* grauf = ObjectAccessor::GetCreature(*me, instance->GetData64(DATA_GRAUF)))
+                    if (Creature* grauf = ObjectAccessor::GetCreature(*me, instance->GetGuidData(DATA_GRAUF)))
                     {
                         DoCast(grauf, SPELL_ENTER_VEHICLE);
 
@@ -454,7 +454,7 @@ public:
                 //3 Hits since Patch 3.3.2 http://www.wowwiki.com/Skadi_the_Ruthless
                 if (harpoonHitCounter >= 3)
                     if (instance)
-                        if (Creature* skadi = ObjectAccessor::GetCreature(*me, instance->GetData64(DATA_SKADI_THE_RUTHLESS)))
+                        if (Creature* skadi = ObjectAccessor::GetCreature(*me, instance->GetGuidData(DATA_SKADI_THE_RUTHLESS)))
                             skadi->AI()->DoAction(ACTION_DISMOUNT);
             }
         }
@@ -477,7 +477,7 @@ public:
                     break;
                 case 3:
                     if (instance)
-                        if (Creature* skadi = ObjectAccessor::GetCreature(*me, instance->GetData64(DATA_SKADI_THE_RUTHLESS)))
+                        if (Creature* skadi = ObjectAccessor::GetCreature(*me, instance->GetGuidData(DATA_SKADI_THE_RUTHLESS)))
                             skadi->AI()->DoAction(ACTION_TRIGGER_SPAWN);
 
                     events.ScheduleEvent(EVENT_MOVE, 2000);
@@ -489,7 +489,7 @@ public:
                     events.ScheduleEvent(EVENT_MOVE, 3000);
                     break;
                 case 6:
-                    if (Creature* skadi = ObjectAccessor::GetCreature(*me, instance->GetData64(DATA_SKADI_THE_RUTHLESS)))
+                    if (Creature* skadi = ObjectAccessor::GetCreature(*me, instance->GetGuidData(DATA_SKADI_THE_RUTHLESS)))
                         skadi->AI()->Talk(EMOTE_RANGE);
 
                     waypointId = 2;
@@ -559,7 +559,7 @@ public:
         if (!instance)
             return false;
 
-        if (Creature* skadi = ObjectAccessor::GetCreature(*go, instance->GetData64(DATA_SKADI_THE_RUTHLESS)))
+        if (Creature* skadi = ObjectAccessor::GetCreature(*go, instance->GetGuidData(DATA_SKADI_THE_RUTHLESS)))
             if (skadi->isInFront(go))
                 player->CastSpell(skadi, SPELL_RAPID_FIRE, true);
 
