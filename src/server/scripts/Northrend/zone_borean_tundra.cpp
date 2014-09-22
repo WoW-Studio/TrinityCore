@@ -67,17 +67,25 @@ public:
 
     struct npc_sinkhole_kill_creditAI : public ScriptedAI
     {
-        npc_sinkhole_kill_creditAI(Creature* creature) : ScriptedAI(creature){ }
+        npc_sinkhole_kill_creditAI(Creature* creature) : ScriptedAI(creature)
+        {
+            Initialize();
+        }
 
-        uint32 phaseTimer;
-        uint8  phase;
-        uint64 casterGuid;
-
-        void Reset() override
+        void Initialize()
         {
             phaseTimer = 500;
             phase = 0;
-            casterGuid = 0;
+            casterGuid.Clear();
+        }
+
+        uint32 phaseTimer;
+        uint8  phase;
+        ObjectGuid casterGuid;
+
+        void Reset() override
+        {
+            Initialize();
         }
 
         void SpellHit(Unit* caster, const SpellInfo* spell) override
@@ -391,7 +399,7 @@ public:
                 if (uiRand < 25)
                 {
                     player->CastSpell(me, SPELL_FREED_WARSONG_PEON, true);
-                    player->KilledMonsterCredit(NPC_WARSONG_PEON, 0);
+                    player->KilledMonsterCredit(NPC_WARSONG_PEON);
                 }
                 else if (uiRand < 75)
                     player->CastSpell(me, nerubarVictims[urand(0, 2)], true);
@@ -447,18 +455,26 @@ public:
 
     struct npc_nesingwary_trapperAI : public ScriptedAI
     {
-        npc_nesingwary_trapperAI(Creature* creature) : ScriptedAI(creature) { creature->SetVisible(false); }
+        npc_nesingwary_trapperAI(Creature* creature) : ScriptedAI(creature)
+        {
+            Initialize();
+        }
 
-        uint64 go_caribouGUID;
+        void Initialize()
+        {
+            me->SetVisible(false);
+            phaseTimer = 2500;
+            phase = 1;
+            go_caribouGUID.Clear();
+        }
+
+        ObjectGuid go_caribouGUID;
         uint8  phase;
         uint32 phaseTimer;
 
         void Reset() override
         {
-            me->SetVisible(false);
-            phaseTimer = 2500;
-            phase = 1;
-            go_caribouGUID = 0;
+            Initialize();
         }
 
         void EnterCombat(Unit* /*who*/) override { }
@@ -474,7 +490,7 @@ public:
                 if (summon->IsSummon())
                     if (Unit* temp = summon->GetSummoner())
                         if (Player* player = temp->ToPlayer())
-                            player->KilledMonsterCredit(me->GetEntry(), 0);
+                            player->KilledMonsterCredit(me->GetEntry());
 
             if (GameObject* go_caribou = me->GetMap()->GetGameObject(go_caribouGUID))
                 go_caribou->SetGoState(GO_STATE_READY);
@@ -576,7 +592,16 @@ public:
 
     struct npc_lurgglbrAI : public npc_escortAI
     {
-        npc_lurgglbrAI(Creature* creature) : npc_escortAI(creature){ }
+        npc_lurgglbrAI(Creature* creature) : npc_escortAI(creature)
+        {
+            Initialize();
+        }
+
+        void Initialize()
+        {
+            IntroTimer = 0;
+            IntroPhase = 0;
+        }
 
         uint32 IntroTimer;
         uint32 IntroPhase;
@@ -584,10 +609,7 @@ public:
         void Reset() override
         {
             if (!HasEscortState(STATE_ESCORT_ESCORTING))
-            {
-                IntroTimer = 0;
-                IntroPhase = 0;
-            }
+                Initialize();
         }
 
         void WaypointReached(uint32 waypointId) override
@@ -723,15 +745,20 @@ public:
     {
         npc_nexus_drake_hatchlingAI(Creature* creature) : FollowerAI(creature)
         {
-            HarpoonerGUID = 0;
+            Initialize();
         }
 
-        uint64 HarpoonerGUID;
+        void Initialize()
+        {
+            WithRedDragonBlood = false;
+        }
+
+        ObjectGuid HarpoonerGUID;
         bool WithRedDragonBlood;
 
         void Reset() override
         {
-           WithRedDragonBlood = false;
+            Initialize();
         }
 
         void EnterCombat(Unit* who) override
@@ -764,10 +791,10 @@ public:
                 {
                     if (Player* pHarpooner = ObjectAccessor::GetPlayer(*me, HarpoonerGUID))
                     {
-                        pHarpooner->KilledMonsterCredit(26175, 0);
+                        pHarpooner->KilledMonsterCredit(26175);
                         pHarpooner->RemoveAura(SPELL_DRAKE_HATCHLING_SUBDUED);
                         SetFollowComplete();
-                        HarpoonerGUID = 0;
+                        HarpoonerGUID.Clear();
                         me->DisappearAndDie();
                     }
                 }
@@ -793,7 +820,7 @@ public:
 
             if ((me->getFaction() == 35) && (!me->HasAura(SPELL_SUBDUED)))
             {
-                HarpoonerGUID = 0;
+                HarpoonerGUID.Clear();
                 me->DisappearAndDie();
             }
 
@@ -863,12 +890,31 @@ public:
 
     struct npc_thassarianAI : public npc_escortAI
     {
-        npc_thassarianAI(Creature* creature) : npc_escortAI(creature) { }
+        npc_thassarianAI(Creature* creature) : npc_escortAI(creature)
+        {
+            Initialize();
+        }
 
-        uint64 arthasGUID;
-        uint64 talbotGUID;
-        uint64 leryssaGUID;
-        uint64 arlosGUID;
+        void Initialize()
+        {
+            arthasGUID.Clear();
+            talbotGUID.Clear();
+            leryssaGUID.Clear();
+            arlosGUID.Clear();
+
+            arthasInPosition = false;
+            arlosInPosition = false;
+            leryssaInPosition = false;
+            talbotInPosition = false;
+
+            phase = 0;
+            phaseTimer = 0;
+        }
+
+        ObjectGuid arthasGUID;
+        ObjectGuid talbotGUID;
+        ObjectGuid leryssaGUID;
+        ObjectGuid arlosGUID;
 
         bool arthasInPosition;
         bool arlosInPosition;
@@ -883,18 +929,7 @@ public:
             me->RestoreFaction();
             me->RemoveStandFlags(UNIT_STAND_STATE_SIT);
 
-            arthasGUID = 0;
-            talbotGUID = 0;
-            leryssaGUID = 0;
-            arlosGUID = 0;
-
-            arthasInPosition = false;
-            arlosInPosition = false;
-            leryssaInPosition = false;
-            talbotInPosition = false;
-
-            phase = 0;
-            phaseTimer = 0;
+            Initialize();
         }
 
         void WaypointReached(uint32 waypointId) override
@@ -1240,10 +1275,23 @@ public:
 
     struct npc_counselor_talbotAI : public ScriptedAI
     {
-        npc_counselor_talbotAI(Creature* creature) : ScriptedAI(creature) { }
+        npc_counselor_talbotAI(Creature* creature) : ScriptedAI(creature)
+        {
+            Initialize();
+        }
 
-        uint64 leryssaGUID;
-        uint64 arlosGUID;
+        void Initialize()
+        {
+            leryssaGUID.Clear();
+            arlosGUID.Clear();
+            bCheck = false;
+            shadowBoltTimer = urand(5000, 12000);
+            deflectionTimer = urand(20000, 25000);
+            soulBlastTimer = urand(12000, 18000);
+        }
+
+        ObjectGuid leryssaGUID;
+        ObjectGuid arlosGUID;
 
         bool bCheck;
 
@@ -1253,12 +1301,7 @@ public:
 
         void Reset() override
         {
-            leryssaGUID         = 0;
-            arlosGUID           = 0;
-            bCheck              = false;
-            shadowBoltTimer   = urand(5000, 12000);
-            deflectionTimer   = urand(20000, 25000);
-            soulBlastTimer    = urand(12000, 18000);
+            Initialize();
         }
         void MovementInform(uint32 uiType, uint32 /*uiId*/) override
         {
@@ -1488,14 +1531,22 @@ public:
 
     struct npc_beryl_sorcererAI : public FollowerAI
     {
-        npc_beryl_sorcererAI(Creature* creature) : FollowerAI(creature) { }
+        npc_beryl_sorcererAI(Creature* creature) : FollowerAI(creature)
+        {
+            Initialize();
+        }
+
+        void Initialize()
+        {
+            bEnslaved = false;
+        }
 
         bool bEnslaved;
 
         void Reset() override
         {
             me->SetReactState(REACT_AGGRESSIVE);
-            bEnslaved = false;
+            Initialize();
         }
 
         void EnterCombat(Unit* who) override
@@ -1572,7 +1623,15 @@ public:
 
     struct npc_imprisoned_beryl_sorcererAI : public ScriptedAI
     {
-        npc_imprisoned_beryl_sorcererAI(Creature* creature) : ScriptedAI(creature) { }
+        npc_imprisoned_beryl_sorcererAI(Creature* creature) : ScriptedAI(creature)
+        {
+            Initialize();
+        }
+
+        void Initialize()
+        {
+            rebuff = 0;
+        }
 
         uint32 rebuff;
 
@@ -1581,7 +1640,7 @@ public:
             if (me->GetReactState() != REACT_PASSIVE)
                 me->SetReactState(REACT_PASSIVE);
 
-            rebuff = 0;
+            Initialize();
         }
 
         void UpdateAI(uint32 diff) override
@@ -1609,15 +1668,11 @@ public:
         void SpellHit(Unit* unit, const SpellInfo* spell) override
         {
             if (spell->Id == SPELL_NEURAL_NEEDLE && unit->GetTypeId() == TYPEID_PLAYER)
-            {
                 if (Player* player = unit->ToPlayer())
-                {
                     GotStinged(player->GetGUID());
-                }
-            }
         }
 
-        void GotStinged(uint64 casterGUID)
+        void GotStinged(ObjectGuid casterGUID)
         {
             if (Player* caster = ObjectAccessor::GetPlayer(*me, casterGUID))
             {
@@ -1644,7 +1699,7 @@ public:
                         break;
                     case 7:
                         Talk(SAY_IMPRISIONED_BERYL_7);
-                        caster->KilledMonsterCredit(NPC_IMPRISONED_BERYL_SORCERER, 0);
+                        caster->KilledMonsterCredit(NPC_IMPRISONED_BERYL_SORCERER);
                         break;
                 }
             }
@@ -1780,12 +1835,21 @@ public:
 
     struct npc_bonker_togglevoltAI : public npc_escortAI
     {
-        npc_bonker_togglevoltAI(Creature* creature) : npc_escortAI(creature) { }
+        npc_bonker_togglevoltAI(Creature* creature) : npc_escortAI(creature)
+        {
+            Initialize();
+        }
+
+        void Initialize()
+        {
+            Bonker_agro = 0;
+        }
+
         uint32 Bonker_agro;
 
         void Reset() override
         {
-            Bonker_agro=0;
+            Initialize();
             SetDespawnAtFar(false);
         }
 
@@ -1878,15 +1942,23 @@ public:
 
     struct npc_trapped_mammoth_calfAI : public ScriptedAI
     {
-        npc_trapped_mammoth_calfAI(Creature* creature) : ScriptedAI(creature) { }
+        npc_trapped_mammoth_calfAI(Creature* creature) : ScriptedAI(creature)
+        {
+            Initialize();
+        }
+
+        void Initialize()
+        {
+            uiTimer = 1500;
+            bStarted = false;
+        }
 
         uint32 uiTimer;
         bool bStarted;
 
         void Reset() override
         {
-            uiTimer = 1500;
-            bStarted = false;
+            Initialize();
 
             GameObject* pTrap = NULL;
             for (uint8 i = 0; i < MammothTrapsNum; ++i)
@@ -1980,7 +2052,7 @@ public:
             {
                 Quest const* qInfo = sObjectMgr->GetQuestTemplate(QUEST_YOU_RE_NOT_SO_BIG_NOW);
                 if (qInfo)
-                    player->KilledMonsterCredit(qInfo->RequiredNpcOrGo[0], 0);
+                    player->KilledMonsterCredit(qInfo->RequiredNpcOrGo[0]);
             }
         }
     };
@@ -2008,13 +2080,21 @@ public:
 
     struct npc_valiance_keep_cannoneerAI : public ScriptedAI
     {
-        npc_valiance_keep_cannoneerAI(Creature* creature) : ScriptedAI(creature) { }
+        npc_valiance_keep_cannoneerAI(Creature* creature) : ScriptedAI(creature)
+        {
+            Initialize();
+        }
+
+        void Initialize()
+        {
+            uiTimer = urand(13000, 18000);
+        }
 
         uint32 uiTimer;
 
         void Reset() override
         {
-            uiTimer = urand(13000, 18000);
+            Initialize();
         }
 
         void UpdateAI(uint32 diff) override
@@ -2066,13 +2146,21 @@ public:
 
     struct npc_warmage_coldarraAI : public ScriptedAI
     {
-        npc_warmage_coldarraAI(Creature* creature) : ScriptedAI(creature) { }
+        npc_warmage_coldarraAI(Creature* creature) : ScriptedAI(creature)
+        {
+            Initialize();
+        }
+
+        void Initialize()
+        {
+            m_uiTimer = 0;
+        }
 
         uint32 m_uiTimer;                 //Timer until recast
 
         void Reset() override
         {
-            m_uiTimer = 0;
+            Initialize();
         }
 
         void EnterCombat(Unit* /*who*/) override { }
@@ -2185,8 +2273,17 @@ public:
     {
         npc_hidden_cultistAI(Creature* creature) : ScriptedAI(creature)
         {
-           uiEmoteState = creature->GetUInt32Value(UNIT_NPC_EMOTESTATE);
-           uiNpcFlags = creature->GetUInt32Value(UNIT_NPC_FLAGS);
+            Initialize();
+            uiEmoteState = creature->GetUInt32Value(UNIT_NPC_EMOTESTATE);
+            uiNpcFlags = creature->GetUInt32Value(UNIT_NPC_FLAGS);
+        }
+
+        void Initialize()
+        {
+            uiEventTimer = 0;
+            uiEventPhase = 0;
+
+            uiPlayerGUID.Clear();
         }
 
         uint32 uiEmoteState;
@@ -2195,7 +2292,7 @@ public:
         uint32 uiEventTimer;
         uint8 uiEventPhase;
 
-        uint64 uiPlayerGUID;
+        ObjectGuid uiPlayerGUID;
 
         void Reset() override
         {
@@ -2205,10 +2302,7 @@ public:
             if (uiNpcFlags)
                 me->SetUInt32Value(UNIT_NPC_FLAGS, uiNpcFlags);
 
-            uiEventTimer = 0;
-            uiEventPhase = 0;
-
-            uiPlayerGUID = 0;
+            Initialize();
 
             DoCast(SPELL_SHROUD_OF_THE_DEATH_CULTIST);
 
@@ -2225,7 +2319,7 @@ public:
             uiEventPhase = 1;
         }
 
-        void SetGUID(uint64 uiGuid, int32 /*iId*/) override
+        void SetGUID(ObjectGuid uiGuid, int32 /*iId*/) override
         {
             uiPlayerGUID = uiGuid;
         }

@@ -134,9 +134,9 @@ public:
 
             Position pos = me->GetPosition();
 
-            for (std::list<uint64>::const_iterator itr = summons.begin(); itr != summons.end(); ++itr)
+            for (ObjectGuid guid : summons)
             {
-                if (Creature* spark = ObjectAccessor::GetCreature(*me, *itr))
+                if (Creature* spark = ObjectAccessor::GetCreature(*me, guid))
                 {
                     if (spark->IsAlive())
                     {
