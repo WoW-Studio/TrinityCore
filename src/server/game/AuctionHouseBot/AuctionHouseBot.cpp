@@ -225,6 +225,12 @@ void AuctionBotConfig::GetConfigFromFile()
     SetConfig(CONFIG_AHBOT_CLASS_TRADEGOOD_MAX_ITEM_LEVEL, "AuctionHouseBot.Class.TradeGood.ItemLevel.Max", 0);
     SetConfig(CONFIG_AHBOT_CLASS_CONTAINER_MIN_ITEM_LEVEL, "AuctionHouseBot.Class.Container.ItemLevel.Min", 0);
     SetConfig(CONFIG_AHBOT_CLASS_CONTAINER_MAX_ITEM_LEVEL, "AuctionHouseBot.Class.Container.ItemLevel.Max", 0);
+
+    SetConfig(CONFIG_AHBOT_OWNER, "AuctionHouseBot.Owner", 0);
+    SetConfig(CONFIG_AHBOT_MAX_GLYPH_STACK, "AuctionHouseBot.Max.Glyph.Stack", 1);
+    SetConfig(CONFIG_AHBOT_MAX_GREEN_STACK, "AuctionHouseBot.Max.Green.Stack", 0);
+    SetConfig(CONFIG_AHBOT_MAX_BLUE_STACK, "AuctionHouseBot.Max.Blue.Stack", 0);
+    SetConfig(CONFIG_AHBOT_MAX_EPIC_STACK, "AuctionHouseBot.Max.Epic.Stack", 0);
 }
 
 char const* AuctionBotConfig::GetHouseTypeName(AuctionHouseType houseType)

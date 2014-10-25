@@ -457,7 +457,9 @@ void AuctionHouseObject::Update()
         ///- Either cancel the auction if there was no bidder
         if (auction->bidder == 0)
         {
-            sAuctionMgr->SendAuctionExpiredMail(auction, trans);
+            if (auction->owner != sWorld->getIntConfig(CONFIG_AHBOT_SELL_OWNER))
+                sAuctionMgr->SendAuctionExpiredMail(auction, trans);
+
             sScriptMgr->OnAuctionExpire(this, auction);
         }
         ///- Or perform the transaction
@@ -466,7 +468,9 @@ void AuctionHouseObject::Update()
             //we should send an "item sold" message if the seller is online
             //we send the item to the winner
             //we send the money to the seller
-            sAuctionMgr->SendAuctionSuccessfulMail(auction, trans);
+            if (auction->owner != sWorld->getIntConfig(CONFIG_AHBOT_SELL_OWNER))
+                sAuctionMgr->SendAuctionSuccessfulMail(auction, trans);
+
             sAuctionMgr->SendAuctionWonMail(auction, trans);
             sScriptMgr->OnAuctionSuccessful(this, auction);
         }

@@ -493,8 +493,11 @@ void WorldSession::HandleAuctionPlaceBid(WorldPacket& recvData)
         GetPlayer()->UpdateAchievementCriteria(ACHIEVEMENT_CRITERIA_TYPE_HIGHEST_AUCTION_BID, auction->buyout);
 
         //- Mails must be under transaction control too to prevent data loss
-        sAuctionMgr->SendAuctionSalePendingMail(auction, trans);
-        sAuctionMgr->SendAuctionSuccessfulMail(auction, trans);
+        if (auction->owner != sWorld->getIntConfig(CONFIG_AHBOT_SELL_OWNER))
+        {
+            sAuctionMgr->SendAuctionSalePendingMail(auction, trans);
+            sAuctionMgr->SendAuctionSuccessfulMail(auction, trans);
+        }
         sAuctionMgr->SendAuctionWonMail(auction, trans);
 
         SendAuctionCommandResult(auction->Id, AUCTION_PLACE_BID, ERR_AUCTION_OK);
@@ -539,29 +542,32 @@ void WorldSession::HandleAuctionRemoveItem(WorldPacket& recvData)
     SQLTransaction trans = CharacterDatabase.BeginTransaction();
     if (auction && auction->owner == player->GetGUIDLow())
     {
-        Item* pItem = sAuctionMgr->GetAItem(auction->itemGUIDLow);
-        if (pItem)
+        if (sWorld->getIntConfig(CONFIG_AHBOT_SELL_OWNER) != auction->owner)
         {
-            if (auction->bidder > 0)                        // If we have a bidder, we have to send him the money he paid
+            Item* pItem = sAuctionMgr->GetAItem(auction->itemGUIDLow);
+            if (pItem)
             {
-                uint32 auctionCut = auction->GetAuctionCut();
-                if (!player->HasEnoughMoney(auctionCut))          //player doesn't have enough money, maybe message needed
-                    return;
-                //some auctionBidderNotification would be needed, but don't know that parts..
-                sAuctionMgr->SendAuctionCancelledToBidderMail(auction, trans);
-                player->ModifyMoney(-int32(auctionCut));
-            }
+                if (auction->bidder > 0)                        // If we have a bidder, we have to send him the money he paid
+                {
+                    uint32 auctionCut = auction->GetAuctionCut();
+                    if (!player->HasEnoughMoney(auctionCut))          //player doesn't have enough money, maybe message needed
+                        return;
+                    //some auctionBidderNotification would be needed, but don't know that parts..
+                    sAuctionMgr->SendAuctionCancelledToBidderMail(auction, trans);
+                    player->ModifyMoney(-int32(auctionCut));
+                }
 
-            // item will deleted or added to received mail list
-            MailDraft(auction->BuildAuctionMailSubject(AUCTION_CANCELED), AuctionEntry::BuildAuctionMailBody(0, 0, auction->buyout, auction->deposit, 0))
-                .AddItem(pItem)
-                .SendMailTo(trans, player, auction, MAIL_CHECK_MASK_COPIED);
-        }
-        else
-        {
-            TC_LOG_ERROR("network", "Auction id: %u has non-existed item (item guid : %u)!!!", auction->Id, auction->itemGUIDLow);
-            SendAuctionCommandResult(0, AUCTION_CANCEL, ERR_AUCTION_DATABASE_ERROR);
-            return;
+                // item will deleted or added to received mail list
+                MailDraft(auction->BuildAuctionMailSubject(AUCTION_CANCELED), AuctionEntry::BuildAuctionMailBody(0, 0, auction->buyout, auction->deposit, 0))
+                    .AddItem(pItem)
+                    .SendMailTo(trans, player, auction, MAIL_CHECK_MASK_COPIED);
+            }
+            else
+            {
+                TC_LOG_ERROR("network", "Auction id: %u has non-existed item (item guid : %u)!!!", auction->Id, auction->itemGUIDLow);
+                SendAuctionCommandResult(0, AUCTION_CANCEL, ERR_AUCTION_DATABASE_ERROR);
+                return;
+            }
         }
     }
     else

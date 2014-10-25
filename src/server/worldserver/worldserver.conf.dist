@@ -3003,6 +3003,55 @@ AuctionHouseBot.Buyer.Neutral.Chance.Ratio = 3
 ###################################################################################################
 
 ###################################################################################################
+#  More Auction Settings
+#
+#    AuctionHouseBot.Owner
+#       Description: Set the AuctionsHouseBot Owner to a other Account ID
+#       Example:     Account ID
+#       Default:     0
+#
+
+AuctionHouseBot.Owner = 0
+
+#    AuctionHouseBot.Max
+#       Description: With 1-10 You can set the Stack
+#       Example:     1-10
+#       Default:     0 = Database
+#
+
+AuctionHouseBot.Max.Glyph.Stack = 1
+AuctionHouseBot.Max.Green.Stack = 0
+AuctionHouseBot.Max.Blue.Stack  = 0
+AuctionHouseBot.Max.Epic.Stack  = 0
+
+AuctionHouseBot.Items.Gray.Price.Ratio       = 100
+AuctionHouseBot.Items.White.Price.Ratio      = 100
+AuctionHouseBot.Items.Green.Price.Ratio      = 100
+AuctionHouseBot.Items.Blue.Price.Ratio       = 100
+AuctionHouseBot.Items.Purple.Price.Ratio     = 100
+AuctionHouseBot.Items.Orange.Price.Ratio     = 100
+AuctionHouseBot.Items.Yellow.Price.Ratio     = 100
+
+AuctionHouseBot.Class.Consumable.Price.Ratio = 100
+AuctionHouseBot.Class.Container.Price.Ratio  = 100
+AuctionHouseBot.Class.Weapon.Price.Ratio     = 100
+AuctionHouseBot.Class.Gem.Price.Ratio        = 100
+AuctionHouseBot.Class.Armor.Price.Ratio      = 100
+AuctionHouseBot.Class.Reagent.Price.Ratio    = 100
+AuctionHouseBot.Class.Projectile.Price.Ratio = 100
+AuctionHouseBot.Class.TradeGood.Price.Ratio  = 100
+AuctionHouseBot.Class.Generic.Price.Ratio    = 100
+AuctionHouseBot.Class.Recipe.Price.Ratio     = 100
+AuctionHouseBot.Class.Quiver.Price.Ratio     = 100
+AuctionHouseBot.Class.Quest.Price.Ratio      = 100
+AuctionHouseBot.Class.Key.Price.Ratio        = 100
+AuctionHouseBot.Class.Misc.Price.Ratio       = 100
+AuctionHouseBot.Class.Glyph.Price.Ratio      = 100
+
+#
+###################################################################################################
+
+###################################################################################################
 #  LOGGING SYSTEM SETTINGS
 #
 #  Appender config values: Given a appender "name"

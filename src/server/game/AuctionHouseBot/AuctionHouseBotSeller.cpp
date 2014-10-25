@@ -622,7 +622,7 @@ uint32 AuctionBotSeller::SetStat(SellerConfiguration& config)
         {
             ItemTemplate const* prototype = item->GetTemplate();
             if (prototype)
-                if (!auctionEntry->owner)                         // Add only ahbot items
+                if (auctionEntry->owner == sAuctionBotConfig->GetConfig(CONFIG_AHBOT_OWNER))                          // Add only ahbot items
                     ++itemsSaved[prototype->Quality][prototype->Class];
         }
     }
@@ -949,7 +949,25 @@ void AuctionBotSeller::AddNewAuctions(SellerConfiguration& config)
             continue;
         }
 
-        uint32 stackCount = urand(1, prototype->GetMaxStackSize());
+        uint32 mStack;
+        switch (prototype->Quality) {
+            case 1:
+                   mStack = prototype->Class == 16 ? sAuctionBotConfig->GetConfig(CONFIG_AHBOT_MAX_GLYPH_STACK) : prototype->GetMaxStackSize();
+                break;
+            case 2:
+                mStack = sAuctionBotConfig->GetConfig(CONFIG_AHBOT_MAX_GREEN_STACK);
+                break;
+            case 3:
+                mStack = sAuctionBotConfig->GetConfig(CONFIG_AHBOT_MAX_BLUE_STACK);
+                break;
+            case 4:
+                mStack = sAuctionBotConfig->GetConfig(CONFIG_AHBOT_MAX_EPIC_STACK);
+                break;
+            default:
+                mStack = prototype->GetMaxStackSize();
+        }
+
+        uint32 stackCount = urand(1, mStack ? mStack : prototype->GetMaxStackSize());
 
         Item* item = Item::CreateItem(itemId, stackCount);
         if (!item)
@@ -989,7 +1007,7 @@ void AuctionBotSeller::AddNewAuctions(SellerConfiguration& config)
 
         AuctionEntry* auctionEntry = new AuctionEntry();
         auctionEntry->Id = sObjectMgr->GenerateAuctionID();
-        auctionEntry->owner = 0;
+        auctionEntry->owner = sAuctionBotConfig->GetConfig(CONFIG_AHBOT_OWNER);
         auctionEntry->itemGUIDLow = item->GetGUIDLow();
         auctionEntry->itemEntry = item->GetEntry();
         auctionEntry->startbid = bidPrice;
