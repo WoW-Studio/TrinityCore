@@ -95,12 +95,7 @@ enum Spells
     SPELL_DEATH                 = 42566       //not correct spell
 };
 
-struct Locations
-{
-    float x, y, z;
-};
-
-static Locations FlightPoint[]=
+G3D::Vector3 const FlightPoint[]=
 {
     {1754.00f, 1346.00f, 17.50f},
     {1765.00f, 1347.00f, 19.00f},
@@ -125,7 +120,7 @@ static Locations FlightPoint[]=
     {1758.00f, 1367.00f, 19.51f}
 };
 
-static Locations Spawn[]=
+G3D::Vector3 const Spawn[]=
 {
     {1776.27f, 1348.74f, 19.20f},       //spawn point for pumpkin shrine mob
     {1765.28f, 1347.46f, 17.55f}     //spawn point for smoke
@@ -882,9 +877,9 @@ public:
     };
 };
 
-enum LooselyTurnedSoil 
+enum LooselyTurnedSoil
 {
-    QUEST_CALL_THE_HEADLESS_HORSEMAN    = 11405
+    QUEST_CALL_THE_HEADLESS_HORSEMAN = 11405
 };
 
 class go_loosely_turned_soil : public GameObjectScript
@@ -892,9 +887,9 @@ class go_loosely_turned_soil : public GameObjectScript
 public:
     go_loosely_turned_soil() : GameObjectScript("go_loosely_turned_soil") { }
 
-    bool OnGossipHello(Player* player, GameObject* go) override
+    bool OnGossipHello(Player* player, GameObject* /*go*/) override
     {
-        if (InstanceScript* instance = go->GetInstanceScript())
+        if (InstanceScript* instance = player->GetInstanceScript())
             if (instance->GetBossState(DATA_HORSEMAN_EVENT) == IN_PROGRESS || player->GetQuestStatus(QUEST_CALL_THE_HEADLESS_HORSEMAN) != QUEST_STATUS_COMPLETE)
                 return true;
 
@@ -904,17 +899,15 @@ public:
     bool OnQuestReward(Player* player, GameObject* go, Quest const* /*quest*/, uint32 /*opt*/) override
     {
         if (InstanceScript* instance = go->GetInstanceScript())
-        {
             if (instance->GetBossState(DATA_HORSEMAN_EVENT) == IN_PROGRESS)
                 return false;
 
+            player->AreaExploredOrEventHappens(11405);
             if (Creature* horseman = go->SummonCreature(HH_MOUNTED, FlightPoint[20].x, FlightPoint[20].y, FlightPoint[20].z, 0, TEMPSUMMON_MANUAL_DESPAWN, 0))
             {
                 ENSURE_AI(boss_headless_horseman::boss_headless_horsemanAI, horseman->AI())->PlayerGUID = player->GetGUID();
                 ENSURE_AI(boss_headless_horseman::boss_headless_horsemanAI, horseman->AI())->FlyMode();
-                instance->SetBossState(DATA_HORSEMAN_EVENT, IN_PROGRESS);
             }
-        }
         return true;
     }
 };

@@ -269,7 +269,7 @@ public:
         const char* onlineState = "";
 
         // Parse the guid to uint32...
-        ObjectGuid parseGUID(HIGHGUID_PLAYER, uint32(atol((char*)args)));
+        ObjectGuid parseGUID(HIGHGUID_PLAYER, atoul(args));
 
         // ... and try to extract a player out of it.
         if (sObjectMgr->GetPlayerNameByGUID(parseGUID, nameTarget))
@@ -343,7 +343,7 @@ public:
 
             // Check if iterator is online. If is...
             Player* p = ObjectAccessor::FindPlayer((*itr).guid);
-            if (p && p->IsInWorld())
+            if (p)
             {
                 // ... than, it prints information like "is online", where he is, etc...
                 onlineState = "online";

@@ -747,7 +747,7 @@ Player* ChatHandler::getSelectedPlayer()
     if (!selected)
         return m_session->GetPlayer();
 
-    return ObjectAccessor::FindPlayer(selected);
+    return ObjectAccessor::FindConnectedPlayer(selected);
 }
 
 Unit* ChatHandler::getSelectedUnit()
@@ -792,7 +792,7 @@ Player* ChatHandler::getSelectedPlayerOrSelf()
         return m_session->GetPlayer();
 
     // first try with selected target
-    Player* targetPlayer = ObjectAccessor::FindPlayer(selected);
+    Player* targetPlayer = ObjectAccessor::FindConnectedPlayer(selected);
     // if the target is not a player, then return self
     if (!targetPlayer)
         targetPlayer = m_session->GetPlayer();
@@ -982,7 +982,7 @@ uint32 ChatHandler::extractSpellIdFromLink(char* text)
     if (!idS)
         return 0;
 
-    uint32 id = (uint32)atol(idS);
+    uint32 id = atoul(idS);
 
     switch (type)
     {
@@ -995,12 +995,9 @@ uint32 ChatHandler::extractSpellIdFromLink(char* text)
             if (!talentEntry)
                 return 0;
 
-            int32 rank = param1_str ? (uint32)atol(param1_str) : 0;
+            uint32 rank = param1_str ? atol(param1_str) : 0u;
             if (rank >= MAX_TALENT_RANK)
                 return 0;
-
-            if (rank < 0)
-                rank = 0;
 
             return talentEntry->RankID[rank];
         }
@@ -1009,7 +1006,7 @@ uint32 ChatHandler::extractSpellIdFromLink(char* text)
             return id;
         case SPELL_LINK_GLYPH:
         {
-            uint32 glyph_prop_id = param1_str ? (uint32)atol(param1_str) : 0;
+            uint32 glyph_prop_id = param1_str ? atoul(param1_str) : 0;
 
             GlyphPropertiesEntry const* glyphPropEntry = sGlyphPropertiesStore.LookupEntry(glyph_prop_id);
             if (!glyphPropEntry)
@@ -1072,7 +1069,7 @@ ObjectGuid ChatHandler::extractGuidFromLink(char* text)
             if (!normalizePlayerName(name))
                 return ObjectGuid::Empty;
 
-            if (Player* player = sObjectAccessor->FindPlayerByName(name))
+            if (Player* player = ObjectAccessor::FindPlayerByName(name))
                 return player->GetGUID();
 
             if (ObjectGuid guid = sObjectMgr->GetPlayerGUIDByName(name))
@@ -1082,7 +1079,7 @@ ObjectGuid ChatHandler::extractGuidFromLink(char* text)
         }
         case SPELL_LINK_CREATURE:
         {
-            uint32 lowguid = (uint32)atol(idS);
+            uint32 lowguid = atoul(idS);
 
             if (CreatureData const* data = sObjectMgr->GetCreatureData(lowguid))
                 return ObjectGuid(HIGHGUID_UNIT, data->id, lowguid);
@@ -1091,7 +1088,7 @@ ObjectGuid ChatHandler::extractGuidFromLink(char* text)
         }
         case SPELL_LINK_GAMEOBJECT:
         {
-            uint32 lowguid = (uint32)atol(idS);
+            uint32 lowguid = atoul(idS);
 
             if (GameObjectData const* data = sObjectMgr->GetGOData(lowguid))
                 return ObjectGuid(HIGHGUID_GAMEOBJECT, data->id, lowguid);
@@ -1130,7 +1127,7 @@ bool ChatHandler::extractPlayerTarget(char* args, Player** player, ObjectGuid* p
             return false;
         }
 
-        Player* pl = sObjectAccessor->FindPlayerByName(name);
+        Player* pl = ObjectAccessor::FindPlayerByName(name);
 
         // if allowed player pointer
         if (player)
@@ -1294,7 +1291,7 @@ bool ChatHandler::GetPlayerGroupAndGUIDByName(const char* cname, Player*& player
                 return false;
             }
 
-            player = sObjectAccessor->FindPlayerByName(name);
+            player = ObjectAccessor::FindPlayerByName(name);
             if (offline)
                 guid = sObjectMgr->GetPlayerGUIDByName(name.c_str());
         }

@@ -411,7 +411,7 @@ class LFGMgr
         /// Checks if all players are queued
         bool AllQueued(GuidList const& check);
         /// Checks if given roles match, modifies given roles map with new roles
-        static bool CheckGroupRoles(LfgRolesMap &groles, bool removeLeaderFlag = true);
+        static bool CheckGroupRoles(LfgRolesMap &groles);
         /// Checks if given players are ignoring each other
         static bool HasIgnore(ObjectGuid guid1, ObjectGuid guid2);
         /// Sends queue status to player
@@ -426,7 +426,7 @@ class LFGMgr
         void DecreaseKicksLeft(ObjectGuid guid);
         void SetState(ObjectGuid guid, LfgState state);
         void RemovePlayerData(ObjectGuid guid);
-        void GetCompatibleDungeons(LfgDungeonSet& dungeons, GuidSet const& players, LfgLockPartyMap& lockMap);
+        void GetCompatibleDungeons(LfgDungeonSet& dungeons, GuidSet const& players, LfgLockPartyMap& lockMap, bool isContinue);
         void _SaveToDB(ObjectGuid guid, uint32 db_guid);
         LFGDungeonData const* GetLFGDungeon(uint32 id);
 

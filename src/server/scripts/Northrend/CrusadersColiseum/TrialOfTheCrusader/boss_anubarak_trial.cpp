@@ -205,14 +205,10 @@ class boss_anubarak_trial : public CreatureScript
             void KilledUnit(Unit* who) override
             {
                 if (who->GetTypeId() == TYPEID_PLAYER)
-                {
                     Talk(SAY_KILL_PLAYER);
-                    instance->SetData(DATA_TRIBUTE_TO_IMMORTALITY_ELIGIBLE, 0);
-                }
             }
 
             void MoveInLineOfSight(Unit* /*who*/) override
-
             {
                 if (!_intro)
                 {
@@ -612,9 +608,7 @@ class npc_frost_sphere : public CreatureScript
 
         struct npc_frost_sphereAI : public ScriptedAI
         {
-            npc_frost_sphereAI(Creature* creature) : ScriptedAI(creature)
-            {
-            }
+            npc_frost_sphereAI(Creature* creature) : ScriptedAI(creature) { }
 
             void Reset() override
             {
@@ -767,7 +761,6 @@ class npc_anubarak_spike : public CreatureScript
             }
 
             void MoveInLineOfSight(Unit* pWho) override
-
             {
                 if (!pWho)
                     return;

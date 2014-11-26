@@ -24,7 +24,6 @@ go_ethereum_stasis
 go_sacred_fire_of_life
 go_shrine_of_the_birds
 go_southfury_moonstone
-go_field_repair_bot_74A
 go_orb_of_command
 go_resonite_cask
 go_tablet_of_madness
@@ -41,8 +40,6 @@ go_dragonflayer_cage
 go_tadpole_cage
 go_amberpine_outhouse
 go_hive_pod
-go_gjalerbron_cage
-go_large_gjalerbron_cage
 go_veil_skith_cage
 EndContentData */
 
@@ -88,24 +85,6 @@ public:
     {
         if (player->HasSkill(SKILL_TAILORING) && player->GetBaseSkillValue(SKILL_TAILORING) >= 280 && !player->HasSpell(26086))
             player->CastSpell(player, 26095, false);
-
-        return true;
-    }
-};
-
-/*######
-## go_field_repair_bot_74A
-######*/
-
-class go_field_repair_bot_74A : public GameObjectScript
-{
-public:
-    go_field_repair_bot_74A() : GameObjectScript("go_field_repair_bot_74A") { }
-
-    bool OnGossipHello(Player* player, GameObject* /*go*/) override
-    {
-        if (player->HasSkill(SKILL_ENGINEERING) && player->GetBaseSkillValue(SKILL_ENGINEERING) >= 300 && !player->HasSpell(22704))
-            player->CastSpell(player, 22864, false);
 
         return true;
     }
@@ -1130,69 +1109,6 @@ class go_massive_seaforium_charge : public GameObjectScript
 };
 
 /*######
-## go_gjalerbron_cage
-######*/
-
-enum OfKeysAndCages
-{
-    QUEST_ALLIANCE_OF_KEYS_AND_CAGES    = 11231,
-    QUEST_HORDE_OF_KEYS_AND_CAGES       = 11265,
-    NPC_GJALERBRON_PRISONER             = 24035,
-    SAY_FREE                            = 0,
-};
-
-class go_gjalerbron_cage : public GameObjectScript
-{
-    public:
-        go_gjalerbron_cage() : GameObjectScript("go_gjalerbron_cage") { }
-
-        bool OnGossipHello(Player* player, GameObject* go) override
-        {
-            go->UseDoorOrButton();
-            if ((player->GetTeamId() == TEAM_ALLIANCE && player->GetQuestStatus(QUEST_ALLIANCE_OF_KEYS_AND_CAGES) == QUEST_STATUS_INCOMPLETE) ||
-                (player->GetTeamId() == TEAM_HORDE && player->GetQuestStatus(QUEST_HORDE_OF_KEYS_AND_CAGES) == QUEST_STATUS_INCOMPLETE))
-            {
-                if (Creature* prisoner = go->FindNearestCreature(NPC_GJALERBRON_PRISONER, 5.0f))
-                {
-                    player->KilledMonsterCredit(NPC_GJALERBRON_PRISONER);
-
-                    prisoner->AI()->Talk(SAY_FREE);
-                    prisoner->DespawnOrUnsummon(6000);
-                }
-            }
-            return true;
-        }
-};
-
-/*########
-## go_large_gjalerbron_cage
-#####*/
-
-class go_large_gjalerbron_cage : public GameObjectScript
-{
-    public:
-        go_large_gjalerbron_cage() : GameObjectScript("go_large_gjalerbron_cage") { }
-
-        bool OnGossipHello(Player* player, GameObject* go) override
-        {
-            go->UseDoorOrButton();
-            if ((player->GetTeamId() == TEAM_ALLIANCE && player->GetQuestStatus(QUEST_ALLIANCE_OF_KEYS_AND_CAGES) == QUEST_STATUS_INCOMPLETE) ||
-                (player->GetTeamId() == TEAM_HORDE && player->GetQuestStatus(QUEST_HORDE_OF_KEYS_AND_CAGES) == QUEST_STATUS_INCOMPLETE))
-            {
-                std::list<Creature*> prisonerList;
-                GetCreatureListWithEntryInGrid(prisonerList, go, NPC_GJALERBRON_PRISONER, INTERACTION_DISTANCE);
-                for (std::list<Creature*>::const_iterator itr = prisonerList.begin(); itr != prisonerList.end(); ++itr)
-                {
-                    player->KilledMonsterCredit(NPC_GJALERBRON_PRISONER, (*itr)->GetGUID());
-                    (*itr)->DespawnOrUnsummon(6000);
-                    (*itr)->AI()->Talk(SAY_FREE);
-                }
-            }
-            return false;
-        }
-};
-
-/*########
 #### go_veil_skith_cage
 #####*/
 
@@ -1284,7 +1200,6 @@ void AddSC_go_scripts()
 {
     new go_cat_figurine();
     new go_barov_journal();
-    new go_field_repair_bot_74A();
     new go_gilded_brazier();
     new go_orb_of_command();
     new go_shrine_of_the_birds();
@@ -1313,8 +1228,6 @@ void AddSC_go_scripts()
     new go_amberpine_outhouse();
     new go_hive_pod();
     new go_massive_seaforium_charge();
-    new go_gjalerbron_cage();
-    new go_large_gjalerbron_cage();
     new go_veil_skith_cage();
     new go_frostblade_shrine();
     new go_midsummer_bonfire();

@@ -29,9 +29,7 @@ class instance_trial_of_the_crusader : public InstanceMapScript
 
         struct instance_trial_of_the_crusader_InstanceMapScript : public InstanceScript
         {
-            instance_trial_of_the_crusader_InstanceMapScript(Map* map) : InstanceScript(map) { }
-
-            void Initialize() override
+            instance_trial_of_the_crusader_InstanceMapScript(Map* map) : InstanceScript(map)
             {
                 SetHeaders(DataHeader);
                 SetBossNumber(MAX_ENCOUNTERS);
@@ -70,15 +68,10 @@ class instance_trial_of_the_crusader : public InstanceMapScript
                 else
                     player->SendUpdateWorldState(UPDATE_STATE_UI_SHOW, 0);
 
-                // make sure Anub'arak isnt missing and floor is destroyed after a crash
+                // make sure Anub'arak isnt missing
                 if (GetBossState(BOSS_LICH_KING) == DONE && TrialCounter && GetBossState(BOSS_ANUBARAK) != DONE)
-                {
-                    if (Creature* anubArak = ObjectAccessor::GetCreature(*player, GetGuidData(NPC_ANUBARAK)))
-                        anubArak = player->SummonCreature(NPC_ANUBARAK, AnubarakLoc[0].GetPositionX(), AnubarakLoc[0].GetPositionY(), AnubarakLoc[0].GetPositionZ(), 3, TEMPSUMMON_CORPSE_TIMED_DESPAWN, DESPAWN_TIME);
-
-                    if (GameObject* floor = ObjectAccessor::GetGameObject(*player, GetGuidData(GO_ARGENT_COLISEUM_FLOOR)))
-                        floor->SetDestructibleState(GO_DESTRUCTIBLE_DAMAGED);
-                }
+                    if (!ObjectAccessor::GetCreature(*player, GetGuidData(NPC_ANUBARAK)))
+                        player->SummonCreature(NPC_ANUBARAK, AnubarakLoc[0], TEMPSUMMON_CORPSE_TIMED_DESPAWN, DESPAWN_TIME);
             }
 
             void OpenDoor(ObjectGuid guid)
@@ -162,23 +155,15 @@ class instance_trial_of_the_crusader : public InstanceMapScript
                 switch (go->GetEntry())
                 {
                     case GO_CRUSADERS_CACHE_10:
-                        if (instance->GetSpawnMode() == RAID_DIFFICULTY_10MAN_NORMAL)
-                            CrusadersCacheGUID = go->GetGUID();
-                        break;
                     case GO_CRUSADERS_CACHE_25:
-                        if (instance->GetSpawnMode() == RAID_DIFFICULTY_25MAN_NORMAL)
-                            CrusadersCacheGUID = go->GetGUID();
-                        break;
                     case GO_CRUSADERS_CACHE_10_H:
-                        if (instance->GetSpawnMode() == RAID_DIFFICULTY_10MAN_HEROIC)
-                            CrusadersCacheGUID = go->GetGUID();
-                        break;
                     case GO_CRUSADERS_CACHE_25_H:
-                        if (instance->GetSpawnMode() == RAID_DIFFICULTY_25MAN_HEROIC)
-                            CrusadersCacheGUID = go->GetGUID();
+                        CrusadersCacheGUID = go->GetGUID();
                         break;
                     case GO_ARGENT_COLISEUM_FLOOR:
                         FloorGUID = go->GetGUID();
+                        if (GetBossState(BOSS_LICH_KING) == DONE)
+                            go->SetDestructibleState(GO_DESTRUCTIBLE_DAMAGED);
                         break;
                     case GO_MAIN_GATE_DOOR:
                         MainGateDoorGUID = go->GetGUID();
@@ -203,6 +188,13 @@ class instance_trial_of_the_crusader : public InstanceMapScript
                     default:
                         break;
                 }
+            }
+
+            void OnUnitDeath(Unit* unit) override
+            {
+                if (unit->GetTypeId() == TYPEID_PLAYER && IsEncounterInProgress())
+                    TributeToImmortalityEligible = false;
+
             }
 
             bool SetBossState(uint32 type, EncounterState state) override
@@ -441,9 +433,6 @@ class instance_trial_of_the_crusader : public InstanceMapScript
                             ++MistressOfPainCount;
                         else if (data == DECREASE)
                             --MistressOfPainCount;
-                        break;
-                    case DATA_TRIBUTE_TO_IMMORTALITY_ELIGIBLE:
-                        TributeToImmortalityEligible = false;
                         break;
                     default:
                         break;
